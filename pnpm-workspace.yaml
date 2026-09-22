@@ -1,0 +1,9 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+onlyBuiltDependencies:
+  - es5-ext
+  - esbuild
+  - unrs-resolver
+  - "@next/swc-win32-x64-msvc"

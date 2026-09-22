@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+.next/
+dist/
+out/
+build/
+.turbo/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Drizzle
+drizzle/
+
+# Misc
+.cache/
