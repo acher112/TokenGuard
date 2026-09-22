@@ -1,10 +1,10 @@
 import { traceContextManager } from "../context";
-import type { AgentWatch } from "../client";
+import type { TokenGuard } from "../client";
 import type { TraceContext } from "../types";
 
 export interface WrapGeminiOptions {
-  /** Optional AgentWatch instance to use for auto-tracing outside of trace() blocks */
-  agentWatch?: AgentWatch;
+  /** Optional TokenGuard instance to use for auto-tracing outside of trace() blocks */
+  tokenGuard?: TokenGuard;
   /** Optional explicit trace to attach calls to */
   trace?: TraceContext;
   /** Default agent name when an LLM call occurs outside of any trace() block */
@@ -15,7 +15,7 @@ export interface WrapGeminiOptions {
 
 /**
  * Wraps a Gemini GenerativeModel instance to automatically record all generateContent() and
- * generateContentStream() calls into AgentWatch traces, capturing model, tokens from
+ * generateContentStream() calls into TokenGuard traces, capturing model, tokens from
  * usageMetadata, latency, and errors.
  *
  * @param model - The GenerativeModel instance (from `genai.getGenerativeModel()`)
@@ -24,13 +24,13 @@ export interface WrapGeminiOptions {
  * @example
  * ```typescript
  * import { GoogleGenerativeAI } from "@google/generative-ai";
- * import { AgentWatch, wrapGemini } from "@agentwatch/sdk";
+ * import { TokenGuard, wrapGemini } from "@tokenguard/sdk";
  *
- * const aw = new AgentWatch({ apiKey: process.env.AGENTWATCH_API_KEY! });
+ * const aw = new TokenGuard({ apiKey: process.env.TOKENGUARD_API_KEY! });
  * const genai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
  * const model = wrapGemini(
  *   genai.getGenerativeModel({ model: "gemini-1.5-pro" }),
- *   { agentWatch: aw, modelName: "gemini-1.5-pro" }
+ *   { tokenGuard: aw, modelName: "gemini-1.5-pro" }
  * );
  *
  * await aw.trace("gemini-agent", async () => {
@@ -93,15 +93,15 @@ export function wrapGemini<T extends object>(
             return recordSpan.call(this, activeContext);
           }
 
-          if (options.agentWatch) {
+          if (options.tokenGuard) {
             // Outside any trace: auto-wrap this standalone call in its own trace
             const agentName = options.fallbackAgentName ?? "gemini-agent";
-            return options.agentWatch.trace(agentName, (trace) =>
+            return options.tokenGuard.trace(agentName, (trace) =>
               recordSpan.call(this, trace)
             );
           }
 
-          // Fallback: invoke unmodified if no trace and no AgentWatch instance
+          // Fallback: invoke unmodified if no trace and no TokenGuard instance
           return originalFn.apply(this, args);
         };
       }

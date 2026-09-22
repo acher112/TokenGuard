@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { wrapOpenAI } from "../integrations/openai";
-import { AgentWatch } from "../client";
+import { TokenGuard } from "../client";
 
 function createMockOpenAI(createImpl?: (...args: any[]) => Promise<any>) {
   return {
@@ -49,8 +49,8 @@ describe("wrapOpenAI", () => {
       return { status: 201, ok: true, text: async () => "{}" };
     });
 
-    const aw = new AgentWatch({
-      apiKey: "aw_live_test",
+    const aw = new TokenGuard({
+      apiKey: "tg_live_test",
       fetch: mockFetch as unknown as typeof fetch,
     });
 
@@ -89,15 +89,15 @@ describe("wrapOpenAI", () => {
     await aw.close();
   });
 
-  it("creates standalone trace when called outside trace() with agentWatch provided", async () => {
+  it("creates standalone trace when called outside trace() with tokenGuard provided", async () => {
     let sentPayload: any = null;
     const mockFetch = vi.fn().mockImplementation(async (_url, init) => {
       sentPayload = JSON.parse(init.body);
       return { status: 201, ok: true, text: async () => "{}" };
     });
 
-    const aw = new AgentWatch({
-      apiKey: "aw_live_test",
+    const aw = new TokenGuard({
+      apiKey: "tg_live_test",
       fetch: mockFetch as unknown as typeof fetch,
     });
 
@@ -129,8 +129,8 @@ describe("wrapOpenAI", () => {
       return { status: 201, ok: true, text: async () => "{}" };
     });
 
-    const aw = new AgentWatch({
-      apiKey: "aw_live_test",
+    const aw = new TokenGuard({
+      apiKey: "tg_live_test",
       fetch: mockFetch as unknown as typeof fetch,
     });
 

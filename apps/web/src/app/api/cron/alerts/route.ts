@@ -60,13 +60,13 @@ export async function GET(request: Request) {
           evaluated: evalResults.length,
         });
       } catch (err) {
-        console.error(`[AgentWatch Cron] Failed to evaluate alerts for project ${projectId}:`, err);
+        console.error(`[TokenGuard Cron] Failed to evaluate alerts for project ${projectId}:`, err);
         // Continue with other projects — don't let one failure block all
       }
     }
 
     console.log(
-      `[AgentWatch Cron] Evaluated ${projectsWithAlerts.length} projects, ${totalFired} alerts fired. (${Date.now() - startTime}ms)`
+      `[TokenGuard Cron] Evaluated ${projectsWithAlerts.length} projects, ${totalFired} alerts fired. (${Date.now() - startTime}ms)`
     );
 
     return NextResponse.json({
@@ -77,7 +77,7 @@ export async function GET(request: Request) {
       durationMs: Date.now() - startTime,
     });
   } catch (err) {
-    console.error("[AgentWatch Cron] Fatal error:", err);
+    console.error("[TokenGuard Cron] Fatal error:", err);
     return NextResponse.json(
       { ok: false, error: "Internal cron error" },
       { status: 500 }

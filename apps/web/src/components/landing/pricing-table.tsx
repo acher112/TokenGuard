@@ -58,7 +58,7 @@ export function LandingPricingTable({ isAuthenticated }: { isAuthenticated?: boo
       subtext: interval === "annual" ? "Save $498 per year (17% off)" : "Billed monthly",
       description: "For organizations scaling high-volume LLM workloads needing governance, compliance, and custom SLAs.",
       cta: "Contact Sales",
-      ctaHref: "mailto:sales@agentwatch.dev?subject=AgentWatch%20Enterprise%20Inquiry",
+      ctaHref: "mailto:sales@tokenguard.dev?subject=TokenGuard%20Enterprise%20Inquiry",
       ctaVariant: "outline" as const,
       features: [
         "1,000,000 traces / month (usage-based overage)",
@@ -176,11 +176,11 @@ export function LandingPricingTable({ isAuthenticated }: { isAuthenticated?: boo
         <div>
           <h4 className="font-semibold text-base">Need HIPAA compliance or On-Premise deployment?</h4>
           <p className="text-sm text-muted-foreground mt-0.5">
-            AgentWatch offers isolated Docker / Helm chart deployments for regulated enterprise workloads.
+            TokenGuard offers isolated Docker / Helm chart deployments for regulated enterprise workloads.
           </p>
         </div>
         <Button asChild variant="outline" size="sm" className="whitespace-nowrap">
-          <Link href="mailto:sales@agentwatch.dev?subject=On-Premise%20Self-Hosting%20Inquiry">
+          <Link href="mailto:sales@tokenguard.dev?subject=On-Premise%20Self-Hosting%20Inquiry">
             Talk to Enterprise Engineering →
           </Link>
         </Button>

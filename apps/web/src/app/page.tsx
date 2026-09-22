@@ -20,7 +20,7 @@ import { LandingPricingTable } from "@/components/landing/pricing-table";
 import { LandingCodeTabs } from "@/components/landing/code-tabs";
 
 export const metadata = {
-  title: "AgentWatch — LLM Observability & Cost Waste Engine",
+  title: "TokenGuard — LLM Observability & Cost Waste Engine",
   description:
     "The developer-first LLM observability platform for production AI agents. Real-time cost waste detection, multi-turn session tracing, and hard spend enforcement.",
 };
@@ -38,7 +38,7 @@ export default async function HomePage() {
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shadow-sm">
               <Zap className="w-4 h-4 fill-current" />
             </div>
-            <span>AgentWatch</span>
+            <span>TokenGuard</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
@@ -46,7 +46,7 @@ export default async function HomePage() {
               Features
             </Link>
             <Link href="#differentiators" className="hover:text-foreground transition-colors">
-              Why AgentWatch
+              Why TokenGuard
             </Link>
             <Link href="#code" className="hover:text-foreground transition-colors">
               SDKs
@@ -158,7 +158,7 @@ export default async function HomePage() {
                   <div className="w-3 h-3 rounded-full bg-rose-500/80" />
                   <div className="w-3 h-3 rounded-full bg-amber-500/80" />
                   <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                  <span className="ml-2 text-xs font-mono text-muted-foreground">app.agentwatch.dev/dashboard/traces/tr_89a12e</span>
+                  <span className="ml-2 text-xs font-mono text-muted-foreground">app.tokenguard.dev/dashboard/traces/tr_89a12e</span>
                 </div>
                 <div className="text-xs font-medium text-muted-foreground flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -267,7 +267,7 @@ export default async function HomePage() {
               </h3>
               <p className="text-muted-foreground mt-4 text-base sm:text-lg">
                 Other observability tools report what you spent after the invoice arrives.
-                AgentWatch proactively reduces your costs and stops overspend before it happens.
+                TokenGuard proactively reduces your costs and stops overspend before it happens.
               </p>
             </div>
 
@@ -281,7 +281,7 @@ export default async function HomePage() {
                   1. Cost Waste Engine with AI Recommendations
                 </h4>
                 <p className="text-muted-foreground leading-relaxed text-sm mb-6">
-                  Traditional LLM monitors give you retrospective spend graphs. AgentWatch scans production traces in real time for:
+                  Traditional LLM monitors give you retrospective spend graphs. TokenGuard scans production traces in real time for:
                 </p>
                 <ul className="space-y-2.5 text-sm">
                   <li className="flex items-start gap-2">
@@ -317,7 +317,7 @@ export default async function HomePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
-                    <span><strong>Automatic Throttling:</strong> When quota is reached, AgentWatch returns HTTP 429 to protect your cloud billing.</span>
+                    <span><strong>Automatic Throttling:</strong> When quota is reached, TokenGuard returns HTTP 429 to protect your cloud billing.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
@@ -370,7 +370,7 @@ export default async function HomePage() {
                 <Terminal className="w-8 h-8 text-primary mb-4" />
                 <h4 className="text-lg font-bold mb-2">OpenTelemetry (OTel) Native</h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Forward standard OTLP JSON traces from any collector or OTel SDK directly to AgentWatch without proprietary lock-in.
+                  Forward standard OTLP JSON traces from any collector or OTel SDK directly to TokenGuard without proprietary lock-in.
                 </p>
               </div>
 
@@ -439,7 +439,7 @@ export default async function HomePage() {
 
             <div className="space-y-6">
               <div className="p-6 rounded-xl border bg-card/60">
-                <h4 className="font-semibold text-base mb-2">Does AgentWatch add latency to my LLM calls?</h4>
+                <h4 className="font-semibold text-base mb-2">Does TokenGuard add latency to my LLM calls?</h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   No. Our SDKs use an asynchronous in-memory background transport with batching and backoff retries.
                   Your API calls execute at native speed, adding less than 2ms total process overhead.
@@ -455,7 +455,7 @@ export default async function HomePage() {
               </div>
 
               <div className="p-6 rounded-xl border bg-card/60">
-                <h4 className="font-semibold text-base mb-2">Can we self-host AgentWatch on our own cloud?</h4>
+                <h4 className="font-semibold text-base mb-2">Can we self-host TokenGuard on our own cloud?</h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   Yes! For enterprise teams with strict data residency, HIPAA, or SOC2 requirements,
                   we offer on-premise Docker and Kubernetes Helm deployments. Contact our enterprise team to get started.
@@ -480,7 +480,7 @@ export default async function HomePage() {
               Ready to take control of your LLM spend?
             </h2>
             <p className="text-muted-foreground text-base sm:text-lg mb-8 max-w-2xl mx-auto">
-              Join developers using AgentWatch to trace, optimize, and enforce agent spend in production.
+              Join developers using TokenGuard to trace, optimize, and enforce agent spend in production.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button asChild size="lg" className="w-full sm:w-auto px-8 py-6 rounded-xl text-base shadow-xl shadow-primary/20">
@@ -505,13 +505,13 @@ export default async function HomePage() {
               <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center text-primary-foreground">
                 <Zap className="w-3.5 h-3.5 fill-current" />
               </div>
-              <span>AgentWatch</span>
+              <span>TokenGuard</span>
             </div>
             <p className="text-xs text-muted-foreground max-w-sm leading-relaxed mb-4">
               Production LLM observability, proactive cost waste detection, and hard spend enforcement for AI agents.
             </p>
             <p className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} AgentWatch Inc. All rights reserved.
+              © {new Date().getFullYear()} TokenGuard Inc. All rights reserved.
             </p>
           </div>
 
@@ -519,7 +519,7 @@ export default async function HomePage() {
             <h5 className="font-semibold text-foreground text-xs uppercase tracking-wider mb-3">Product</h5>
             <ul className="space-y-2 text-xs">
               <li><Link href="#features" className="hover:text-foreground">Features</Link></li>
-              <li><Link href="#differentiators" className="hover:text-foreground">Why AgentWatch</Link></li>
+              <li><Link href="#differentiators" className="hover:text-foreground">Why TokenGuard</Link></li>
               <li><Link href="#pricing" className="hover:text-foreground">Pricing</Link></li>
               <li><Link href="/roadmap" className="hover:text-foreground">Roadmap</Link></li>
             </ul>
@@ -538,8 +538,8 @@ export default async function HomePage() {
           <div>
             <h5 className="font-semibold text-foreground text-xs uppercase tracking-wider mb-3">Company</h5>
             <ul className="space-y-2 text-xs">
-              <li><Link href="mailto:hello@agentwatch.dev" className="hover:text-foreground">Contact</Link></li>
-              <li><Link href="mailto:sales@agentwatch.dev" className="hover:text-foreground">Enterprise Sales</Link></li>
+              <li><Link href="mailto:hello@tokenguard.dev" className="hover:text-foreground">Contact</Link></li>
+              <li><Link href="mailto:sales@tokenguard.dev" className="hover:text-foreground">Enterprise Sales</Link></li>
               <li><Link href="/roadmap" className="hover:text-foreground">Changelog</Link></li>
             </ul>
           </div>

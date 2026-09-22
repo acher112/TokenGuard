@@ -8,9 +8,9 @@ const SNIPPETS = {
     title: "Python (Groq)",
     language: "python",
     code: `from groq import Groq
-from agentwatch import AgentWatch
+from tokenguard import TokenGuard
 
-aw = AgentWatch(api_key="aw_live_...", base_url="https://agentwatch.dev")
+aw = TokenGuard(api_key="tg_live_...", base_url="https://tokenguard.dev")
 # 1-Line auto-instrumentation
 client = aw.wrap_groq(Groq(), session_id="user_session_101")
 
@@ -24,9 +24,9 @@ response = client.chat.completions.create(
     title: "Python (OpenAI)",
     language: "python",
     code: `from openai import OpenAI
-from agentwatch import AgentWatch
+from tokenguard import TokenGuard
 
-aw = AgentWatch(api_key="aw_live_...")
+aw = TokenGuard(api_key="tg_live_...")
 # Automatically captures token usage and calculates USD cost per call
 client = aw.wrap_openai(OpenAI())
 
@@ -39,9 +39,9 @@ response = client.chat.completions.create(
     title: "Python (Anthropic)",
     language: "python",
     code: `import anthropic
-from agentwatch import AgentWatch
+from tokenguard import TokenGuard
 
-aw = AgentWatch(api_key="aw_live_...")
+aw = TokenGuard(api_key="tg_live_...")
 # Wraps Anthropic — captures input/output tokens and USD cost automatically
 client = aw.wrap_anthropic(anthropic.Anthropic())
 
@@ -55,10 +55,10 @@ with aw.trace("claude-agent") as trace:
   nodejs: {
     title: "Node.js (OpenAI)",
     language: "typescript",
-    code: `import { AgentWatch } from "@agentwatch/sdk";
+    code: `import { TokenGuard } from "@tokenguard/sdk";
 import OpenAI from "openai";
 
-const aw = new AgentWatch({ apiKey: "aw_live_..." });
+const aw = new TokenGuard({ apiKey: "tg_live_..." });
 const openai = aw.wrapOpenAI(new OpenAI());
 
 // Fully typed, non-blocking telemetry stream
@@ -70,10 +70,10 @@ const res = await openai.chat.completions.create({
   nodejs_anthropic: {
     title: "Node.js (Anthropic)",
     language: "typescript",
-    code: `import { AgentWatch } from "@agentwatch/sdk";
+    code: `import { TokenGuard } from "@tokenguard/sdk";
 import Anthropic from "@anthropic-ai/sdk";
 
-const aw = new AgentWatch({ apiKey: "aw_live_..." });
+const aw = new TokenGuard({ apiKey: "tg_live_..." });
 const anthropic = aw.wrapAnthropic(new Anthropic());
 
 // Automatically tracked — model, tokens, cost, latency
@@ -90,17 +90,17 @@ await aw.trace("claude-agent", async () => {
     language: "yaml",
     code: `# Standard OTLP Exporter Configuration
 exporters:
-  otlp/agentwatch:
-    endpoint: "https://agentwatch.dev/api/v1/otel/traces"
+  otlp/tokenguard:
+    endpoint: "https://tokenguard.dev/api/v1/otel/traces"
     headers:
-      Authorization: "Bearer aw_live_..."
+      Authorization: "Bearer tg_live_..."
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp/agentwatch]`,
+      exporters: [otlp/tokenguard]`,
   },
 };
 

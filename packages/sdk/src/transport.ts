@@ -20,7 +20,7 @@ const MAX_STRING_LENGTH = 32_000; // Truncate oversized JSON payloads to 32KB ma
 function truncateString(str: string | undefined): string | undefined {
   if (!str) return str;
   if (str.length <= MAX_STRING_LENGTH) return str;
-  return str.slice(0, MAX_STRING_LENGTH) + "... [truncated by AgentWatch SDK]";
+  return str.slice(0, MAX_STRING_LENGTH) + "... [truncated by TokenGuard SDK]";
 }
 
 /**
@@ -85,7 +85,7 @@ export class Transport {
     this.timer = setInterval(() => {
       this.flush().catch((err) => {
         if (this.options.debug) {
-          console.error("[AgentWatch Transport] Scheduled flush error:", err);
+          console.error("[TokenGuard Transport] Scheduled flush error:", err);
         }
       });
     }, this.options.flushIntervalMs);
@@ -102,7 +102,7 @@ export class Transport {
   enqueue(payload: TracePayload): void {
     if (this.isClosed) {
       if (this.options.debug) {
-        console.warn("[AgentWatch Transport] Transport is closed, dropping trace:", payload.agentName);
+        console.warn("[TokenGuard Transport] Transport is closed, dropping trace:", payload.agentName);
       }
       return;
     }
@@ -114,7 +114,7 @@ export class Transport {
 
     if (this.options.dryRun) {
       if (this.options.debug) {
-        console.log("[AgentWatch Transport] Dry run — trace recorded:", JSON.stringify(sanitizedPayload, null, 2));
+        console.log("[TokenGuard Transport] Dry run — trace recorded:", JSON.stringify(sanitizedPayload, null, 2));
       }
       return;
     }
@@ -124,7 +124,7 @@ export class Transport {
     if (this.queue.length >= this.options.maxBatchSize) {
       this.flush().catch((err) => {
         if (this.options.debug) {
-          console.error("[AgentWatch Transport] Batch flush error:", err);
+          console.error("[TokenGuard Transport] Batch flush error:", err);
         }
       });
     }
@@ -170,7 +170,7 @@ export class Transport {
 
       if (res.status >= 200 && res.status < 300) {
         if (this.options.debug) {
-          console.log(`[AgentWatch Transport] Trace sent successfully (${payload.agentName})`);
+          console.log(`[TokenGuard Transport] Trace sent successfully (${payload.agentName})`);
         }
         return;
       }
@@ -179,7 +179,7 @@ export class Transport {
       if (res.status >= 400 && res.status < 500) {
         if (this.options.debug) {
           const errText = await res.text().catch(() => "");
-          console.error(`[AgentWatch Transport] Ingestion rejected (${res.status}): ${errText}`);
+          console.error(`[TokenGuard Transport] Ingestion rejected (${res.status}): ${errText}`);
         }
         return;
       }
@@ -190,13 +190,13 @@ export class Transport {
       if (attempt < this.options.maxRetries) {
         const delay = this.options.retryDelayMs * Math.pow(2, attempt - 1);
         if (this.options.debug) {
-          console.warn(`[AgentWatch Transport] Attempt ${attempt} failed, retrying in ${delay}ms...`, err);
+          console.warn(`[TokenGuard Transport] Attempt ${attempt} failed, retrying in ${delay}ms...`, err);
         }
         await new Promise((resolve) => setTimeout(resolve, delay));
         return this.sendWithRetry(payload, attempt + 1);
       } else {
         if (this.options.debug) {
-          console.error(`[AgentWatch Transport] Failed to send trace after ${attempt} attempts:`, err);
+          console.error(`[TokenGuard Transport] Failed to send trace after ${attempt} attempts:`, err);
         }
       }
     }

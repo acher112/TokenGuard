@@ -84,7 +84,7 @@ export const apiKeys = pgTable("api_keys", {
   name: text("name").notNull().default("Default"),
   // Only the sha256 hash is stored — the raw key is shown once at creation
   keyHash: text("key_hash").notNull(),
-  // First 12 chars stored for display (e.g. "aw_live_abc1...")
+  // First 12 chars stored for display (e.g. "tg_live_abc1...")
   keyPrefix: text("key_prefix").notNull(),
   lastUsedAt: timestamp("last_used_at", { mode: "date" }),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),

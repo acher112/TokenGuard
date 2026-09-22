@@ -53,7 +53,7 @@ export default function OnboardingPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const curlSnippet = `curl -X POST https://agentwatch.dev/api/v1/ingest \\
+  const curlSnippet = `curl -X POST https://tokenguard.dev/api/v1/ingest \\
   -H "Authorization: Bearer ${apiKey || "YOUR_API_KEY"}" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -76,10 +76,10 @@ export default function OnboardingPage() {
     }]
   }'`;
 
-  const sdkSnippet = `import { AgentWatch } from "@agentwatch/sdk";
+  const sdkSnippet = `import { TokenGuard } from "@tokenguard/sdk";
 import OpenAI from "openai";
 
-const aw = new AgentWatch({ apiKey: "${apiKey || "YOUR_API_KEY"}" });
+const aw = new TokenGuard({ apiKey: "${apiKey || "YOUR_API_KEY"}" });
 const openai = aw.wrapOpenAI(new OpenAI());
 
 const result = await aw.trace("my-agent", async (trace) => {
@@ -105,7 +105,7 @@ const result = await aw.trace("my-agent", async (trace) => {
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
             <Zap className="h-5 w-5 text-primary-foreground" />
           </div>
-          <h1 className="text-2xl font-bold">Welcome to AgentWatch</h1>
+          <h1 className="text-2xl font-bold">Welcome to TokenGuard</h1>
           <p className="text-center text-muted-foreground">Set up your monitoring in 4 steps.</p>
         </div>
 
@@ -186,7 +186,7 @@ const result = await aw.trace("my-agent", async (trace) => {
             <CardContent className="space-y-4">
               <div className="flex items-center gap-2 rounded-md border bg-muted p-3">
                 <code className="flex-1 break-all font-mono text-sm">
-                  {apiKey || "aw_live_..."}
+                  {apiKey || "tg_live_..."}
                 </code>
                 <Button
                   variant="ghost"
@@ -247,7 +247,7 @@ const result = await aw.trace("my-agent", async (trace) => {
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Install:{" "}
-                  <code className="rounded bg-muted px-1">npm install @agentwatch/sdk</code>
+                  <code className="rounded bg-muted px-1">npm install @tokenguard/sdk</code>
                 </p>
               </div>
 

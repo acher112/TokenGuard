@@ -1,22 +1,22 @@
-# agentwatch (Python SDK)
+# tokenguard (Python SDK)
 
 **Monitor AI agents, track LLM costs, debug failures — in 2 lines of code.**
 
 ## Install
 
 ```bash
-pip install agentwatch
+pip install tokenguard
 ```
 
 ## Quick Start — Auto-wrap Groq (zero code change)
 
 ```python
 from groq import Groq
-from agentwatch import AgentWatch
+from tokenguard import TokenGuard
 
-aw = AgentWatch(
-    api_key="aw_live_...",           # from your dashboard Settings
-    base_url="http://localhost:3000", # your AgentWatch URL
+aw = TokenGuard(
+    api_key="tg_live_...",           # from your dashboard Settings
+    base_url="http://localhost:3000", # your TokenGuard URL
 )
 
 # Wrap your existing Groq client — ONE LINE
@@ -36,9 +36,9 @@ print(response.choices[0].message.content)
 
 ```python
 from openai import OpenAI
-from agentwatch import AgentWatch
+from tokenguard import TokenGuard
 
-aw = AgentWatch(api_key="aw_live_...", base_url="http://localhost:3000")
+aw = TokenGuard(api_key="tg_live_...", base_url="http://localhost:3000")
 
 # Wrap your OpenAI client
 openai = aw.wrap_openai(OpenAI(api_key="..."), agent_name="SupportBot")
@@ -52,9 +52,9 @@ response = openai.chat.completions.create(
 ## Manual Tracing (full control)
 
 ```python
-from agentwatch import AgentWatch
+from tokenguard import TokenGuard
 
-aw = AgentWatch(api_key="aw_live_...", base_url="http://localhost:3000")
+aw = TokenGuard(api_key="tg_live_...", base_url="http://localhost:3000")
 
 def get_diet_plan(user_message):
     with aw.trace("DietSuggestionAgent") as trace:

@@ -99,7 +99,7 @@ export function ApiKeyManager({ projectId, initialKeys }: Props) {
           <div>
             <CardTitle>API Keys</CardTitle>
             <CardDescription>
-              Keys used by the AgentWatch SDK to send traces. A raw key is only shown once at creation.
+              Keys used by the TokenGuard SDK to send traces. A raw key is only shown once at creation.
             </CardDescription>
           </div>
           <Button size="sm" onClick={() => setShowForm((v) => !v)}>

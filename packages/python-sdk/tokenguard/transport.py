@@ -1,5 +1,5 @@
 """
-Transport — sends trace payloads to the AgentWatch ingest API.
+Transport — sends trace payloads to the TokenGuard ingest API.
 Handles retries, timeouts, and never crashes the host application.
 """
 from __future__ import annotations
@@ -63,22 +63,22 @@ class Transport:
 
                 if response.status_code == 201:
                     if self.debug:
-                        print(f"[AgentWatch] Trace sent: {response.json().get('traceId')}")
+                        print(f"[TokenGuard] Trace sent: {response.json().get('traceId')}")
                     return
 
                 # 4xx errors — don't retry
                 if 400 <= response.status_code < 500:
                     if self.debug:
-                        print(f"[AgentWatch] Client error {response.status_code}: {response.text}")
+                        print(f"[TokenGuard] Client error {response.status_code}: {response.text}")
                     return
 
                 # 5xx — retry
                 if self.debug:
-                    print(f"[AgentWatch] Server error {response.status_code}, retrying ({attempt + 1}/{self.max_retries})")
+                    print(f"[TokenGuard] Server error {response.status_code}, retrying ({attempt + 1}/{self.max_retries})")
 
             except requests.exceptions.RequestException as e:
                 if self.debug:
-                    print(f"[AgentWatch] Request failed: {e}, retrying ({attempt + 1}/{self.max_retries})")
+                    print(f"[TokenGuard] Request failed: {e}, retrying ({attempt + 1}/{self.max_retries})")
 
             if attempt < self.max_retries - 1:
                 time.sleep(self.retry_delay * (2 ** attempt))

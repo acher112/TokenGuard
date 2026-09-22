@@ -78,7 +78,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       ? [
           Resend({
             apiKey: process.env.RESEND_API_KEY,
-            from: process.env.RESEND_FROM_EMAIL ?? "noreply@agentwatch.dev",
+            from: process.env.RESEND_FROM_EMAIL ?? "noreply@tokenguard.dev",
           }),
         ]
       : []),

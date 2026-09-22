@@ -1,10 +1,10 @@
 import { traceContextManager } from "../context";
-import type { AgentWatch } from "../client";
+import type { TokenGuard } from "../client";
 import type { TraceContext } from "../types";
 
 export interface WrapAnthropicOptions {
-  /** Optional AgentWatch instance to use for auto-tracing outside of trace() blocks */
-  agentWatch?: AgentWatch;
+  /** Optional TokenGuard instance to use for auto-tracing outside of trace() blocks */
+  tokenGuard?: TokenGuard;
   /** Optional explicit trace to attach calls to */
   trace?: TraceContext;
   /** Default agent name when an LLM call occurs outside of any trace() block */
@@ -13,7 +13,7 @@ export interface WrapAnthropicOptions {
 
 /**
  * Wraps an Anthropic client instance to automatically record all messages.create() calls
- * into AgentWatch traces, capturing model, tokens, latency, and errors.
+ * into TokenGuard traces, capturing model, tokens, latency, and errors.
  *
  * @param anthropic - The Anthropic client instance
  * @param options - Optional configuration
@@ -21,10 +21,10 @@ export interface WrapAnthropicOptions {
  * @example
  * ```typescript
  * import Anthropic from "@anthropic-ai/sdk";
- * import { AgentWatch, wrapAnthropic } from "@agentwatch/sdk";
+ * import { TokenGuard, wrapAnthropic } from "@tokenguard/sdk";
  *
- * const aw = new AgentWatch({ apiKey: process.env.AGENTWATCH_API_KEY! });
- * const anthropic = wrapAnthropic(new Anthropic(), { agentWatch: aw });
+ * const aw = new TokenGuard({ apiKey: process.env.TOKENGUARD_API_KEY! });
+ * const anthropic = wrapAnthropic(new Anthropic(), { tokenGuard: aw });
  *
  * await aw.trace("claude-agent", async () => {
  *   const msg = await anthropic.messages.create({
@@ -83,15 +83,15 @@ export function wrapAnthropic<T extends object>(
                   return recordSpan.call(this, activeContext);
                 }
 
-                if (options.agentWatch) {
+                if (options.tokenGuard) {
                   // Outside any trace: auto-wrap this standalone call in its own trace
                   const agentName = options.fallbackAgentName ?? "anthropic-agent";
-                  return options.agentWatch.trace(agentName, (trace) =>
+                  return options.tokenGuard.trace(agentName, (trace) =>
                     recordSpan.call(this, trace)
                   );
                 }
 
-                // Fallback: invoke unmodified if no trace and no AgentWatch instance
+                // Fallback: invoke unmodified if no trace and no TokenGuard instance
                 return originalCreate.apply(this, [params, ...args]);
               };
             }

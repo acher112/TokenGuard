@@ -5,12 +5,12 @@ import * as schema from "./schema";
 // ─── Validate env ─────────────────────────────────────────────────────────────
 
 const connectionString =
-  process.env.DATABASE_URL || "postgresql://postgres:postgres@localhost:5432/agentwatch_placeholder";
+  process.env.DATABASE_URL || "postgresql://postgres:postgres@localhost:5432/tokenguard_placeholder";
 
 if (!process.env.DATABASE_URL && process.env.NODE_ENV !== "production") {
   // Warn in development if not configured
   console.warn(
-    "[AgentWatch] DATABASE_URL is not set. Database operations will fail. Copy .env.example to apps/web/.env.local."
+    "[TokenGuard] DATABASE_URL is not set. Database operations will fail. Copy .env.example to apps/web/.env.local."
   );
 }
 

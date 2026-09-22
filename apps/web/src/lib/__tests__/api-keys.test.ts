@@ -2,14 +2,14 @@ import { describe, it, expect } from "vitest";
 import { generateApiKey, hashApiKey, maskKeyPrefix } from "@/lib/api-keys";
 
 describe("API key utilities", () => {
-  it("generates a key with aw_live_ prefix", () => {
+  it("generates a key with tg_live_ prefix", () => {
     const { rawKey } = generateApiKey();
-    expect(rawKey.startsWith("aw_live_")).toBe(true);
+    expect(rawKey.startsWith("tg_live_")).toBe(true);
   });
 
   it("generates a key with correct length", () => {
     const { rawKey } = generateApiKey();
-    // "aw_live_" (8) + 64 hex chars = 72 total
+    // "tg_live_" (8) + 64 hex chars = 72 total
     expect(rawKey.length).toBe(72);
   });
 
@@ -35,12 +35,12 @@ describe("API key utilities", () => {
   it("keyPrefix is 16 chars", () => {
     const { keyPrefix } = generateApiKey();
     expect(keyPrefix.length).toBe(16);
-    expect(keyPrefix.startsWith("aw_live_")).toBe(true);
+    expect(keyPrefix.startsWith("tg_live_")).toBe(true);
   });
 
   it("maskKeyPrefix adds dots", () => {
-    const masked = maskKeyPrefix("aw_live_abc1");
+    const masked = maskKeyPrefix("tg_live_abc1");
     expect(masked).toContain("•");
-    expect(masked.startsWith("aw_live_abc1")).toBe(true);
+    expect(masked.startsWith("tg_live_abc1")).toBe(true);
   });
 });

@@ -90,7 +90,7 @@ export async function POST(request: Request) {
   const authHeader = request.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
     return NextResponse.json(
-      { error: "Missing API key", message: "Include 'Authorization: Bearer aw_live_...' header" },
+      { error: "Missing API key", message: "Include 'Authorization: Bearer tg_live_...' header" },
       { status: 401 }
     );
   }

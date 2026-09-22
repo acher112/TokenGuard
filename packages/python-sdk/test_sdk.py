@@ -1,6 +1,6 @@
 """
-Quick test — verifies the AgentWatch Python SDK works
-with your local AgentWatch instance.
+Quick test — verifies the TokenGuard Python SDK works
+with your local TokenGuard instance.
 
 Run: python test_sdk.py
 """
@@ -8,20 +8,20 @@ import sys
 import os
 
 # Add the SDK to path (before publishing to PyPI)
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../agentwatch/packages/python-sdk"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../tokenguard/packages/python-sdk"))
 
-from agentwatch import AgentWatch
+from tokenguard import TokenGuard
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-API_KEY = "aw_live_REPLACE_WITH_YOUR_KEY"  # paste your key from Settings
+API_KEY = "tg_live_REPLACE_WITH_YOUR_KEY"  # paste your key from Settings
 BASE_URL = "http://localhost:3000"
 
 # ── Test ──────────────────────────────────────────────────────────────────────
 
-aw = AgentWatch(api_key=API_KEY, base_url=BASE_URL, debug=True)
+aw = TokenGuard(api_key=API_KEY, base_url=BASE_URL, debug=True)
 
-print("Sending test trace to AgentWatch...")
+print("Sending test trace to TokenGuard...")
 
 with aw.trace("DietSuggestionAgent") as trace:
     # Simulate a Groq LLM call (no real API needed for this test)

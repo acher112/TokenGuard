@@ -1,10 +1,10 @@
 import { traceContextManager } from "../context";
-import type { AgentWatch } from "../client";
+import type { TokenGuard } from "../client";
 import type { TraceContext } from "../types";
 
 export interface WrapOpenAIOptions {
-  /** Optional AgentWatch instance to use for auto-tracing */
-  agentWatch?: AgentWatch;
+  /** Optional TokenGuard instance to use for auto-tracing */
+  tokenGuard?: TokenGuard;
 
   /** Optional explicit trace to attach calls to */
   trace?: TraceContext;
@@ -15,7 +15,7 @@ export interface WrapOpenAIOptions {
 
 /**
  * Wraps an OpenAI client instance to automatically record all chat completions
- * into AgentWatch traces, capturing model, tokens, latency, temperature, and errors.
+ * into TokenGuard traces, capturing model, tokens, latency, temperature, and errors.
  *
  * @param openai - The OpenAI client instance (or compatible mock)
  * @param options - Optional configuration
@@ -23,10 +23,10 @@ export interface WrapOpenAIOptions {
  * @example
  * ```typescript
  * import OpenAI from "openai";
- * import { AgentWatch, wrapOpenAI } from "@agentwatch/sdk";
+ * import { TokenGuard, wrapOpenAI } from "@tokenguard/sdk";
  *
- * const aw = new AgentWatch({ apiKey: process.env.AGENTWATCH_API_KEY! });
- * const openai = wrapOpenAI(new OpenAI(), { agentWatch: aw });
+ * const aw = new TokenGuard({ apiKey: process.env.TOKENGUARD_API_KEY! });
+ * const openai = wrapOpenAI(new OpenAI(), { tokenGuard: aw });
  *
  * // Automatically recorded under "customer-agent" trace:
  * await aw.trace("customer-agent", async () => {
@@ -93,11 +93,11 @@ export function wrapOpenAI<T extends object>(
                         }
                       }
 
-                      // If outside of an active trace and an agentWatch instance was provided,
+                      // If outside of an active trace and an tokenGuard instance was provided,
                       // automatically wrap this standalone call in its own trace:
-                      if (options.agentWatch) {
+                      if (options.tokenGuard) {
                         const agentName = options.fallbackAgentName ?? "openai-chat";
-                        return options.agentWatch.trace(agentName, async (trace) => {
+                        return options.tokenGuard.trace(agentName, async (trace) => {
                           const llmSpan = trace.llm({
                             model: params?.model ?? "unknown-openai",
                             provider: "openai",
@@ -128,7 +128,7 @@ export function wrapOpenAI<T extends object>(
                         });
                       }
 
-                      // Fallback: invoke unmodified if no trace and no AgentWatch instance
+                      // Fallback: invoke unmodified if no trace and no TokenGuard instance
                       return originalCreate.apply(this, [params, ...args]);
                     };
                   }

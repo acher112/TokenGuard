@@ -1,5 +1,5 @@
 import type {
-  AgentWatchConfig,
+  TokenGuardConfig,
   TraceContext,
   TracePayload,
   TraceOptions,
@@ -18,18 +18,18 @@ import { wrapOpenAI, type WrapOpenAIOptions } from "./integrations/openai";
 import { wrapAnthropic, type WrapAnthropicOptions } from "./integrations/anthropic";
 import { wrapGemini, type WrapGeminiOptions } from "./integrations/gemini";
 
-const DEFAULT_BASE_URL = "https://agentwatch.dev";
+const DEFAULT_BASE_URL = "https://tokenguard.dev";
 
 /**
- * AgentWatch Client — production developer SDK for monitoring AI agents and applications.
+ * TokenGuard Client — production developer SDK for monitoring AI agents and applications.
  */
-export class AgentWatch {
-  private readonly config: Required<AgentWatchConfig>;
+export class TokenGuard {
+  private readonly config: Required<TokenGuardConfig>;
   private readonly transport: Transport;
 
-  constructor(config: AgentWatchConfig) {
+  constructor(config: TokenGuardConfig) {
     if (!config.apiKey) {
-      throw new Error("AgentWatch: apiKey is required.");
+      throw new Error("TokenGuard: apiKey is required.");
     }
 
     this.config = {
@@ -59,13 +59,13 @@ export class AgentWatch {
 
   /**
    * Instrument an OpenAI client instance to automatically record all calls
-   * directly into AgentWatch.
+   * directly into TokenGuard.
    *
    * @param openai - The OpenAI client instance
    * @param options - Optional configuration
    */
   wrapOpenAI<T extends object>(openai: T, options?: WrapOpenAIOptions): T {
-    return wrapOpenAI(openai, { agentWatch: this, ...options });
+    return wrapOpenAI(openai, { tokenGuard: this, ...options });
   }
 
   /**
@@ -75,7 +75,7 @@ export class AgentWatch {
    * @param options - Optional configuration
    */
   wrapAnthropic<T extends object>(anthropic: T, options?: WrapAnthropicOptions): T {
-    return wrapAnthropic(anthropic, { agentWatch: this, ...options });
+    return wrapAnthropic(anthropic, { tokenGuard: this, ...options });
   }
 
   /**
@@ -85,7 +85,7 @@ export class AgentWatch {
    * @param options - Optional configuration
    */
   wrapGemini<T extends object>(model: T, options?: WrapGeminiOptions): T {
-    return wrapGemini(model, { agentWatch: this, ...options });
+    return wrapGemini(model, { tokenGuard: this, ...options });
   }
 
   /**

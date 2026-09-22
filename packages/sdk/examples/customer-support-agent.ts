@@ -1,5 +1,5 @@
 /**
- * AgentWatch Example: Customer Support Agent Tracing
+ * TokenGuard Example: Customer Support Agent Tracing
  *
  * Demonstrates tracing the multi-step agent flow from Section 4 of the specification:
  * User -> LLM -> Search database -> Shipping API -> LLM -> Answer
@@ -8,14 +8,14 @@
  * npx tsx packages/sdk/examples/customer-support-agent.ts
  */
 
-import { AgentWatch } from "../src";
+import { TokenGuard } from "../src";
 
 // Initialize the SDK (dryRun: true allows running without a live backend)
-const aw = new AgentWatch({
-  apiKey: process.env.AGENTWATCH_API_KEY || "aw_live_demo_key_1234567890",
-  baseUrl: process.env.AGENTWATCH_BASE_URL || "http://localhost:3000",
+const aw = new TokenGuard({
+  apiKey: process.env.TOKENGUARD_API_KEY || "tg_live_demo_key_1234567890",
+  baseUrl: process.env.TOKENGUARD_BASE_URL || "http://localhost:3000",
   debug: true,
-  dryRun: !process.env.AGENTWATCH_API_KEY,
+  dryRun: !process.env.TOKENGUARD_API_KEY,
 });
 
 async function runCustomerSupportAgent(userQuestion: string) {

@@ -1,8 +1,8 @@
 {
-  "name": "agentwatch",
+  "name": "tokenguard",
   "private": true,
   "version": "0.0.1",
-  "description": "AgentWatch — AI agent monitoring, debugging & cost analytics",
+  "description": "TokenGuard — AI agent monitoring, debugging & cost analytics",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",

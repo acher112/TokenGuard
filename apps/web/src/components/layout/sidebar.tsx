@@ -41,7 +41,7 @@ export function Sidebar({ projectSwitcher }: SidebarProps = {}) {
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
           <Zap className="h-4 w-4 text-primary-foreground" />
         </div>
-        <span className="text-lg font-bold tracking-tight">AgentWatch</span>
+        <span className="text-lg font-bold tracking-tight">TokenGuard</span>
       </div>
 
       {/* Project Switcher */}
@@ -78,7 +78,7 @@ export function Sidebar({ projectSwitcher }: SidebarProps = {}) {
 
       {/* Footer */}
       <div className="border-t p-4 flex items-center justify-between">
-        <p className="text-xs text-muted-foreground">AgentWatch v0.1.0</p>
+        <p className="text-xs text-muted-foreground">TokenGuard v0.1.0</p>
         <Link
           href="/roadmap"
           target="_blank"

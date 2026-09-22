@@ -1,25 +1,25 @@
-# agentwatch
+# tokenguard
 
 **Monitor AI agents. Track LLM costs. Debug failures.**
 
-AgentWatch is a developer SDK that records every AI request your app makes — which models were called, how many tokens were used, how much it cost, and where it failed.
+TokenGuard is a developer SDK that records every AI request your app makes — which models were called, how many tokens were used, how much it cost, and where it failed.
 
 ## Install
 
 ```bash
-npm install agentwatch
+npm install tokenguard
 # or
-pip install agentwatch  # Python SDK
+pip install tokenguard  # Python SDK
 ```
 
 ## Quick Start — Node.js
 
 ```typescript
-import AgentWatch from "agentwatch";
+import TokenGuard from "tokenguard";
 
-const aw = new AgentWatch({
-  apiKey: "aw_live_...",          // from your AgentWatch dashboard
-  baseUrl: "https://yourapp.com", // your AgentWatch deployment
+const aw = new TokenGuard({
+  apiKey: "tg_live_...",          // from your TokenGuard dashboard
+  baseUrl: "https://yourapp.com", // your TokenGuard deployment
 });
 
 // Wrap your OpenAI client — automatic tracking
@@ -35,9 +35,9 @@ const response = await client.chat.completions.create({
 ## Quick Start — Python
 
 ```python
-from agentwatch import AgentWatch
+from tokenguard import TokenGuard
 
-aw = AgentWatch(api_key="aw_live_...", base_url="https://yourapp.com")
+aw = TokenGuard(api_key="tg_live_...", base_url="https://yourapp.com")
 
 # Wrap your OpenAI client
 client = aw.wrap_openai(OpenAI())
@@ -92,4 +92,4 @@ with aw.trace("diet-agent") as trace:
 
 - [Dashboard](https://yourapp.com)
 - [Documentation](https://yourapp.com/docs)
-- [GitHub](https://github.com/yourusername/agentwatch)
+- [GitHub](https://github.com/yourusername/tokenguard)

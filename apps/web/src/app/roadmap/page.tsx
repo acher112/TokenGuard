@@ -8,8 +8,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Roadmap — AgentWatch",
-  description: "See what's live, what's in progress, and what's coming next to AgentWatch.",
+  title: "Roadmap — TokenGuard",
+  description: "See what's live, what's in progress, and what's coming next to TokenGuard.",
 };
 
 type FeatureStatus = "live" | "progress" | "planned" | "considering";
@@ -55,7 +55,7 @@ const FEATURES: { category: string; items: Feature[] }[] = [
       },
       {
         name: "OpenTelemetry (OTel) OTLP ingestion",
-        description: "Send spans from any OTel-compatible SDK directly to AgentWatch.",
+        description: "Send spans from any OTel-compatible SDK directly to TokenGuard.",
         status: "live",
         tier: "Enterprise",
       },
@@ -71,7 +71,7 @@ const FEATURES: { category: string; items: Feature[] }[] = [
       },
       {
         name: "Spend enforcement (block before overspend)",
-        description: "Set monthly trace or cost budgets. AgentWatch blocks ingest when limits are hit — not just alerts after the fact.",
+        description: "Set monthly trace or cost budgets. TokenGuard blocks ingest when limits are hit — not just alerts after the fact.",
         status: "live",
       },
       {
@@ -161,7 +161,7 @@ const FEATURES: { category: string; items: Feature[] }[] = [
     items: [
       {
         name: "Self-hosting option",
-        description: "Deploy AgentWatch on your own infrastructure for data-residency-sensitive workloads.",
+        description: "Deploy TokenGuard on your own infrastructure for data-residency-sensitive workloads.",
         status: "considering",
         tier: "Enterprise",
       },
@@ -189,7 +189,7 @@ export default function RoadmapPage() {
       <div className="border-b bg-background/95 backdrop-blur sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 font-semibold text-lg">
-            <span className="text-primary">⚡</span> AgentWatch
+            <span className="text-primary">⚡</span> TokenGuard
           </Link>
           <div className="flex items-center gap-3">
             <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -210,7 +210,7 @@ export default function RoadmapPage() {
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold tracking-tight mb-4">Product Roadmap</h1>
           <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
-            AgentWatch is moving fast. {liveCounts} of {totalCount} planned features are already live.
+            TokenGuard is moving fast. {liveCounts} of {totalCount} planned features are already live.
             This page is updated as we ship.
           </p>
 
@@ -234,11 +234,11 @@ export default function RoadmapPage() {
           <ul className="mt-3 space-y-2 text-sm">
             <li className="flex items-start gap-2">
               <span className="text-green-500 mt-0.5">✓</span>
-              <span><strong>Cost Waste Engine with AI recommendations</strong> — AgentWatch doesn&apos;t just show you spend. It proactively identifies what&apos;s wasting money and tells you how to fix it.</span>
+              <span><strong>Cost Waste Engine with AI recommendations</strong> — TokenGuard doesn&apos;t just show you spend. It proactively identifies what&apos;s wasting money and tells you how to fix it.</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-green-500 mt-0.5">✓</span>
-              <span><strong>Spend enforcement (block before overspend)</strong> — Set hard limits. AgentWatch throttles ingest when you&apos;re about to go over budget. Competitors only alert after the fact.</span>
+              <span><strong>Spend enforcement (block before overspend)</strong> — Set hard limits. TokenGuard throttles ingest when you&apos;re about to go over budget. Competitors only alert after the fact.</span>
             </li>
           </ul>
         </div>
@@ -282,7 +282,7 @@ export default function RoadmapPage() {
             Tell us what you need. We prioritize based on real user demand.
           </p>
           <a
-            href="mailto:hello@agentwatch.dev"
+            href="mailto:hello@tokenguard.dev"
             className="inline-flex items-center gap-2 text-sm bg-primary text-primary-foreground px-6 py-2.5 rounded-md hover:bg-primary/90 transition-colors"
           >
             Request a feature →
@@ -291,7 +291,7 @@ export default function RoadmapPage() {
       </main>
 
       <footer className="border-t mt-8 py-8 text-center text-xs text-muted-foreground">
-        AgentWatch v0.1.0 — Competitive data sourced September 2026. Pricing pages change frequently; re-verify before finalizing.
+        TokenGuard v0.1.0 — Competitive data sourced September 2026. Pricing pages change frequently; re-verify before finalizing.
       </footer>
     </div>
   );

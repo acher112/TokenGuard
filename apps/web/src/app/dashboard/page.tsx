@@ -221,7 +221,7 @@ export default async function DashboardPage() {
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>Recent Traces</CardTitle>
-            <CardDescription>Latest agent workflows recorded by AgentWatch</CardDescription>
+            <CardDescription>Latest agent workflows recorded by TokenGuard</CardDescription>
           </div>
           <Link
             href="/dashboard/traces"
@@ -237,7 +237,7 @@ export default async function DashboardPage() {
                 No traces yet. Install the SDK to record your first agent workflow:
               </p>
               <pre className="mt-3 inline-block rounded-md bg-muted px-4 py-2 font-mono text-xs">
-                npm install @agentwatch/sdk
+                npm install @tokenguard/sdk
               </pre>
             </div>
           ) : (

@@ -1,5 +1,5 @@
 /**
- * AgentWatch Example: OpenAI Auto-Instrumentation
+ * TokenGuard Example: OpenAI Auto-Instrumentation
  *
  * Demonstrates wrapOpenAI automatic recording:
  * Every call to chat.completions.create is automatically intercepted and recorded
@@ -9,11 +9,11 @@
  * npx tsx packages/sdk/examples/openai-auto-instrumentation.ts
  */
 
-import { AgentWatch, wrapOpenAI } from "../src";
+import { TokenGuard, wrapOpenAI } from "../src";
 
 // Initialize SDK
-const aw = new AgentWatch({
-  apiKey: process.env.AGENTWATCH_API_KEY || "aw_live_demo_key",
+const aw = new TokenGuard({
+  apiKey: process.env.TOKENGUARD_API_KEY || "tg_live_demo_key",
   dryRun: true,
   debug: true,
 });

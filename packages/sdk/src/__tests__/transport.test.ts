@@ -38,8 +38,8 @@ describe("Transport", () => {
     });
 
     const transport = new Transport({
-      apiKey: "aw_live_test",
-      baseUrl: "https://agentwatch.dev",
+      apiKey: "tg_live_test",
+      baseUrl: "https://tokenguard.dev",
       fetch: mockFetch as unknown as typeof fetch,
       flushIntervalMs: 10000, // don't auto-flush
     });
@@ -49,9 +49,9 @@ describe("Transport", () => {
 
     expect(mockFetch).toHaveBeenCalledTimes(1);
     const [url, init] = mockFetch.mock.calls[0];
-    expect(url).toBe("https://agentwatch.dev/api/v1/ingest");
+    expect(url).toBe("https://tokenguard.dev/api/v1/ingest");
     expect(init.method).toBe("POST");
-    expect(init.headers["Authorization"]).toBe("Bearer aw_live_test");
+    expect(init.headers["Authorization"]).toBe("Bearer tg_live_test");
 
     const sentBody = JSON.parse(init.body);
     expect(sentBody.agentName).toBe("test-agent");
@@ -71,8 +71,8 @@ describe("Transport", () => {
     });
 
     const transport = new Transport({
-      apiKey: "aw_live_test",
-      baseUrl: "https://agentwatch.dev",
+      apiKey: "tg_live_test",
+      baseUrl: "https://tokenguard.dev",
       fetch: mockFetch as unknown as typeof fetch,
       maxRetries: 3,
       retryDelayMs: 10, // fast retry for tests
@@ -93,8 +93,8 @@ describe("Transport", () => {
     });
 
     const transport = new Transport({
-      apiKey: "aw_live_invalid",
-      baseUrl: "https://agentwatch.dev",
+      apiKey: "tg_live_invalid",
+      baseUrl: "https://tokenguard.dev",
       fetch: mockFetch as unknown as typeof fetch,
       maxRetries: 3,
       retryDelayMs: 10,
@@ -118,8 +118,8 @@ describe("Transport", () => {
     });
 
     const transport = new Transport({
-      apiKey: "aw_live_test",
-      baseUrl: "https://agentwatch.dev",
+      apiKey: "tg_live_test",
+      baseUrl: "https://tokenguard.dev",
       fetch: mockFetch as unknown as typeof fetch,
     });
 
@@ -145,7 +145,7 @@ describe("Transport", () => {
 
     expect(sentPayload).toBeDefined();
     expect(sentPayload.steps[0].llmCall.requestJson.length).toBeLessThan(40_000);
-    expect(sentPayload.steps[0].llmCall.requestJson).toContain("[truncated by AgentWatch SDK]");
+    expect(sentPayload.steps[0].llmCall.requestJson).toContain("[truncated by TokenGuard SDK]");
 
     await transport.close();
   });
@@ -158,8 +158,8 @@ describe("Transport", () => {
     });
 
     const transport = new Transport({
-      apiKey: "aw_live_test",
-      baseUrl: "https://agentwatch.dev",
+      apiKey: "tg_live_test",
+      baseUrl: "https://tokenguard.dev",
       fetch: mockFetch as unknown as typeof fetch,
     });
 

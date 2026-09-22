@@ -1,4 +1,4 @@
-# Contributing to AgentWatch
+# Contributing to TokenGuard
 
 ## Prerequisites
 
@@ -12,8 +12,8 @@ pnpm install
 cp .env.example apps/web/.env.local
 # Fill in apps/web/.env.local
 
-pnpm --filter @agentwatch/web db:generate
-pnpm --filter @agentwatch/web db:migrate
+pnpm --filter @tokenguard/web db:generate
+pnpm --filter @tokenguard/web db:migrate
 pnpm dev
 ```
 
@@ -37,7 +37,7 @@ apps/web/src/
   types/        ← TypeScript type declarations
 
 packages/sdk/src/
-  client.ts     ← AgentWatch class
+  client.ts     ← TokenGuard class
   types.ts      ← All TypeScript types
   index.ts      ← Public exports
 ```

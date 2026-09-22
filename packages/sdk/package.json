@@ -1,9 +1,9 @@
 {
-  "name": "agentwatch",
+  "name": "tokenguard",
   "version": "0.1.0",
-  "description": "Monitor AI agents, track LLM costs, debug failures — AgentWatch SDK",
-  "author": "AgentWatch",
-  "homepage": "https://github.com/yourusername/agentwatch",
+  "description": "Monitor AI agents, track LLM costs, debug failures — TokenGuard SDK",
+  "author": "TokenGuard",
+  "homepage": "https://github.com/yourusername/tokenguard",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -25,7 +25,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/agentwatch-js"
+    "url": "https://github.com/yourusername/tokenguard-js"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

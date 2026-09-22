@@ -2,7 +2,7 @@
  * OpenTelemetry OTLP Traces Ingest — POST /api/v1/otel/traces
  *
  * Accepts OpenTelemetry OTLP JSON format (protobuf-encoded spans).
- * Maps OTel spans → AgentWatch trace/step schema.
+ * Maps OTel spans → TokenGuard trace/step schema.
  * Gated to Enterprise plan (hasOTelIngestion).
  *
  * Compatible with: otel-collector, opentelemetry-sdk-python, opentelemetry-js

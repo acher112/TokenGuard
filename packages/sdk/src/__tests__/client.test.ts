@@ -1,20 +1,20 @@
 import { describe, it, expect } from "vitest";
-import { AgentWatch } from "../client";
+import { TokenGuard } from "../client";
 
-describe("AgentWatch SDK", () => {
+describe("TokenGuard SDK", () => {
   it("throws if initialized without apiKey", () => {
     // @ts-expect-error test invalid param
-    expect(() => new AgentWatch({})).toThrow("apiKey is required");
+    expect(() => new TokenGuard({})).toThrow("apiKey is required");
   });
 
   it("initializes successfully with apiKey", () => {
-    const aw = new AgentWatch({ apiKey: "aw_live_test123" });
-    expect(aw).toBeInstanceOf(AgentWatch);
+    const aw = new TokenGuard({ apiKey: "tg_live_test123" });
+    expect(aw).toBeInstanceOf(TokenGuard);
   });
 
   it("executes a simple trace and returns the result", async () => {
-    const aw = new AgentWatch({
-      apiKey: "aw_live_test123",
+    const aw = new TokenGuard({
+      apiKey: "tg_live_test123",
       dryRun: true,
     });
 
@@ -27,8 +27,8 @@ describe("AgentWatch SDK", () => {
   });
 
   it("handles LLM and tool spans correctly within trace", async () => {
-    const aw = new AgentWatch({
-      apiKey: "aw_live_test123",
+    const aw = new TokenGuard({
+      apiKey: "tg_live_test123",
       dryRun: true,
     });
 
@@ -46,8 +46,8 @@ describe("AgentWatch SDK", () => {
   });
 
   it("records errors when trace function throws", async () => {
-    const aw = new AgentWatch({
-      apiKey: "aw_live_test123",
+    const aw = new TokenGuard({
+      apiKey: "tg_live_test123",
       dryRun: true,
     });
 

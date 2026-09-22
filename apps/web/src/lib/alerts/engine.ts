@@ -5,7 +5,7 @@ import { Resend } from "resend";
 import { formatCost } from "@/lib/utils";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "alerts@agentwatch.dev";
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "alerts@tokenguard.dev";
 
 export interface AlertEvaluationResult {
   alertId: string;
@@ -141,7 +141,7 @@ async function dispatchNotification(
   currentValue: number,
   threshold: number
 ): Promise<void> {
-  const subject = `🚨 [AgentWatch Alert] ${rule.name}: ${rule.metric.replace("_", " ").toUpperCase()} Triggered`;
+  const subject = `🚨 [TokenGuard Alert] ${rule.name}: ${rule.metric.replace("_", " ").toUpperCase()} Triggered`;
 
   // 1. Email Channel
   if (rule.channel === "email" && rule.destination) {
@@ -153,23 +153,23 @@ async function dispatchNotification(
           subject,
           html: `
             <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 8px;">
-              <h2 style="color: #0f172a; margin-top: 0;">AgentWatch Alert: ${rule.name}</h2>
+              <h2 style="color: #0f172a; margin-top: 0;">TokenGuard Alert: ${rule.name}</h2>
               <div style="background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 16px; margin: 16px 0;">
                 <p style="color: #991b1b; font-weight: 600; margin: 0;">${message}</p>
               </div>
               <p style="color: #64748b; font-size: 14px;">
-                Log into your <a href="https://agentwatch.dev/dashboard" style="color: #6366f1; text-decoration: underline;">AgentWatch Dashboard</a> to review traces and take corrective action.
+                Log into your <a href="https://tokenguard.dev/dashboard" style="color: #6366f1; text-decoration: underline;">TokenGuard Dashboard</a> to review traces and take corrective action.
               </p>
               <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
-              <p style="color: #94a3b8; font-size: 12px; margin: 0;">AgentWatch Monitoring System</p>
+              <p style="color: #94a3b8; font-size: 12px; margin: 0;">TokenGuard Monitoring System</p>
             </div>
           `,
         });
       } catch (err) {
-        console.error("[AgentWatch Alerts] Failed to send email via Resend:", err);
+        console.error("[TokenGuard Alerts] Failed to send email via Resend:", err);
       }
     } else {
-      console.log(`[AgentWatch Alerts (Local Dev - No RESEND_API_KEY)] To: ${rule.destination} | Subject: ${subject} | ${message}`);
+      console.log(`[TokenGuard Alerts (Local Dev - No RESEND_API_KEY)] To: ${rule.destination} | Subject: ${subject} | ${message}`);
     }
   }
 
@@ -183,7 +183,7 @@ async function dispatchNotification(
           blocks: [
             {
               type: "header",
-              text: { type: "plain_text", text: "🚨 AgentWatch Alert Triggered", emoji: true },
+              text: { type: "plain_text", text: "🚨 TokenGuard Alert Triggered", emoji: true },
             },
             {
               type: "section",
@@ -204,7 +204,7 @@ async function dispatchNotification(
                 {
                   type: "button",
                   text: { type: "plain_text", text: "View Dashboard →", emoji: true },
-                  url: "https://agentwatch.dev/dashboard",
+                  url: "https://tokenguard.dev/dashboard",
                   style: "primary",
                 },
               ],
@@ -212,14 +212,14 @@ async function dispatchNotification(
             {
               type: "context",
               elements: [
-                { type: "mrkdwn", text: `AgentWatch Monitoring • ${new Date().toUTCString()}` },
+                { type: "mrkdwn", text: `TokenGuard Monitoring • ${new Date().toUTCString()}` },
               ],
             },
           ],
         }),
       });
     } catch (err) {
-      console.error("[AgentWatch Alerts] Failed to dispatch Slack alert:", err);
+      console.error("[TokenGuard Alerts] Failed to dispatch Slack alert:", err);
     }
   }
 
@@ -230,7 +230,7 @@ async function dispatchNotification(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          text: `🚨 *AgentWatch Alert*: ${rule.name}\n${message}`,
+          text: `🚨 *TokenGuard Alert*: ${rule.name}\n${message}`,
           metric: rule.metric,
           currentValue,
           threshold,
@@ -238,7 +238,7 @@ async function dispatchNotification(
         }),
       });
     } catch (err) {
-      console.error("[AgentWatch Alerts] Failed to dispatch webhook:", err);
+      console.error("[TokenGuard Alerts] Failed to dispatch webhook:", err);
     }
   }
 }

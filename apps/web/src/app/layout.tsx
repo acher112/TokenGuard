@@ -7,8 +7,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-geist-sans" });
 
 export const metadata: Metadata = {
   title: {
-    default: "AgentWatch — AI Agent Monitoring & Cost Analytics",
-    template: "%s | AgentWatch",
+    default: "TokenGuard — AI Agent Monitoring & Cost Analytics",
+    template: "%s | TokenGuard",
   },
   description:
     "Trace every AI call, debug failures, analyze token usage, and find where your AI budget is being wasted.",

@@ -1,19 +1,19 @@
-# AgentWatch
+# TokenGuard
 
 > **Debug your AI agents. Understand every AI request. Find and reduce wasted AI costs.**
 
-AgentWatch is a developer SaaS that monitors AI agents and AI-powered applications — capturing every LLM call, tool invocation, token count, latency, and cost, then surfacing them in a clean dashboard with cost intelligence.
+TokenGuard is a developer SaaS that monitors AI agents and AI-powered applications — capturing every LLM call, tool invocation, token count, latency, and cost, then surfacing them in a clean dashboard with cost intelligence.
 
 ---
 
 ## Monorepo Structure
 
 ```
-agentwatch/
+tokenguard/
 ├── apps/
 │   └── web/          # Next.js 14 dashboard + API
 └── packages/
-    └── sdk/          # @agentwatch/sdk npm package
+    └── sdk/          # @tokenguard/sdk npm package
 ```
 
 ---
@@ -29,8 +29,8 @@ agentwatch/
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/yourname/agentwatch
-cd agentwatch
+git clone https://github.com/yourname/tokenguard
+cd tokenguard
 pnpm install
 ```
 
@@ -54,8 +54,8 @@ Open `apps/web/.env.local` and fill in:
 ### 3. Run database migrations
 
 ```bash
-pnpm --filter @agentwatch/web db:generate
-pnpm --filter @agentwatch/web db:migrate
+pnpm --filter @tokenguard/web db:generate
+pnpm --filter @tokenguard/web db:migrate
 ```
 
 ### 4. Seed model pricing
@@ -85,7 +85,7 @@ Open http://localhost:3000
 
 ```bash
 # Install the SDK in your AI application
-npm install @agentwatch/sdk
+npm install @tokenguard/sdk
 
 # Or test immediately with curl
 curl -X POST http://localhost:3000/api/v1/ingest \
@@ -119,11 +119,11 @@ The trace will appear in your dashboard within seconds.
 ## SDK Usage
 
 ```typescript
-import { AgentWatch } from "@agentwatch/sdk";
+import { TokenGuard } from "@tokenguard/sdk";
 
-const aw = new AgentWatch({
-  apiKey: process.env.AGENTWATCH_API_KEY!,
-  // baseUrl defaults to https://agentwatch.dev
+const aw = new TokenGuard({
+  apiKey: process.env.TOKENGUARD_API_KEY!,
+  // baseUrl defaults to https://tokenguard.dev
   // For local dev: baseUrl: "http://localhost:3000"
 });
 

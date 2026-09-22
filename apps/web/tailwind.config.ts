@@ -51,7 +51,7 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // AgentWatch brand colors
+        // TokenGuard brand colors
         aw: {
           indigo: "#6366f1",
           "indigo-dark": "#4f46e5",

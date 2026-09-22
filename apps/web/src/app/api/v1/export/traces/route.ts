@@ -122,7 +122,7 @@ export async function GET(req: NextRequest) {
     return new Response(csv, {
       headers: {
         "Content-Type": "text/csv",
-        "Content-Disposition": `attachment; filename="agentwatch-traces-${projectId}.csv"`,
+        "Content-Disposition": `attachment; filename="tokenguard-traces-${projectId}.csv"`,
       },
     });
   }
@@ -147,7 +147,7 @@ export async function GET(req: NextRequest) {
   return new Response(jsonl, {
     headers: {
       "Content-Type": "application/x-ndjson",
-      "Content-Disposition": `attachment; filename="agentwatch-traces-${projectId}.jsonl"`,
+      "Content-Disposition": `attachment; filename="tokenguard-traces-${projectId}.jsonl"`,
     },
   });
 }

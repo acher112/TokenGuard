@@ -1,10 +1,10 @@
 """
-AgentWatch Python Client — main entry point.
+TokenGuard Python Client — main entry point.
 
 Usage:
-    from agentwatch import AgentWatch
+    from tokenguard import TokenGuard
 
-    aw = AgentWatch(api_key="aw_live_...", base_url="http://localhost:3000")
+    aw = TokenGuard(api_key="tg_live_...", base_url="http://localhost:3000")
 
     # Option 1: Auto-wrap OpenAI
     client = aw.wrap_openai(OpenAI())
@@ -38,16 +38,16 @@ def _now_iso() -> str:
     return datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
 
-DEFAULT_BASE_URL = "https://agentwatch.dev"
+DEFAULT_BASE_URL = "https://tokenguard.dev"
 
 
-class AgentWatch:
+class TokenGuard:
     """
-    AgentWatch Python SDK client.
+    TokenGuard Python SDK client.
 
     Args:
-        api_key: Your AgentWatch API key (from the dashboard Settings page)
-        base_url: URL of your AgentWatch deployment (default: https://agentwatch.dev)
+        api_key: Your TokenGuard API key (from the dashboard Settings page)
+        base_url: URL of your TokenGuard deployment (default: https://tokenguard.dev)
         debug: Print debug logs (default: False)
     """
 
@@ -58,7 +58,7 @@ class AgentWatch:
         debug: bool = False,
     ):
         if not api_key:
-            raise ValueError("AgentWatch: api_key is required")
+            raise ValueError("TokenGuard: api_key is required")
 
         self._api_key = api_key
         self._base_url = base_url.rstrip("/")

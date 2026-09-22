@@ -1,10 +1,10 @@
 // ─── Configuration ─────────────────────────────────────────────────────────
 
-export interface AgentWatchConfig {
-  /** Your AgentWatch API key (aw_live_...) */
+export interface TokenGuardConfig {
+  /** Your TokenGuard API key (tg_live_...) */
   apiKey: string;
 
-  /** Base URL of the AgentWatch API. Defaults to https://agentwatch.dev */
+  /** Base URL of the TokenGuard API. Defaults to https://tokenguard.dev */
   baseUrl?: string;
 
   /** Whether to enable debug logging. Defaults to false. */
@@ -106,7 +106,7 @@ export interface ErrorOptions {
 
 // ─── Payload ───────────────────────────────────────────────────────────────
 
-/** The full trace payload sent to the AgentWatch ingestion API */
+/** The full trace payload sent to the TokenGuard ingestion API */
 export interface TracePayload {
   agentName: string;
   status: "success" | "failed" | "timeout";

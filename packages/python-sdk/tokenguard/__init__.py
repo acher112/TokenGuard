@@ -1,10 +1,10 @@
 """
-AgentWatch Python SDK
+TokenGuard Python SDK
 Monitor AI agents, track LLM costs, debug failures.
 """
 
-from .client import AgentWatch
+from .client import TokenGuard
 from .trace import TraceContext
 
 __version__ = "0.1.0"
-__all__ = ["AgentWatch", "TraceContext"]
+__all__ = ["TokenGuard", "TraceContext"]
