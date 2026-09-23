@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Zap, Copy, Check, ArrowRight, Terminal, Package } from "lucide-react";
+import { Zap, Copy, Check, ArrowRight, Terminal, Package, KeyRound, GitBranch, DollarSign, Sparkles, Compass } from "lucide-react";
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -291,45 +291,84 @@ const result = await aw.trace("my-agent", async (trace) => {
 
         {/* Step 4: Done */}
         {step === 4 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>🎉 You&apos;re all set!</CardTitle>
+          <Card className="border-border shadow-sm">
+            <CardHeader className="text-center pb-2">
+              <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <Compass className="h-6 w-6" />
+              </div>
+              <CardTitle className="text-xl">🎉 You&apos;re All Set!</CardTitle>
               <CardDescription>
-                Your project <strong>{projectName}</strong> is ready. Head to your dashboard to
-                see incoming traces.
+                Project <strong>{projectName}</strong> is created. Here is how to navigate your new dashboard:
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                <div className="rounded-lg border p-3">
-                  <div className="font-medium">Traces</div>
-                  <div className="mt-0.5 text-xs text-muted-foreground">
-                    Every agent run captured
+            <CardContent className="space-y-4 pt-2">
+              {/* Dashboard Guidance Grid */}
+              <div className="space-y-2.5">
+                <div className="flex items-start gap-3 rounded-lg border bg-card p-3 shadow-xs">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary mt-0.5">
+                    <KeyRound className="h-4 w-4" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="text-xs font-semibold text-foreground">
+                      1. Settings → API Keys & SDKs
+                    </div>
+                    <div className="text-[11px] text-muted-foreground leading-relaxed">
+                      Generate keys anytime, view your active key prefixes, and copy complete setup code for OpenAI, Anthropic, Gemini, Python, and cURL.
+                    </div>
                   </div>
                 </div>
-                <div className="rounded-lg border p-3">
-                  <div className="font-medium">Cost Analytics</div>
-                  <div className="mt-0.5 text-xs text-muted-foreground">Token usage + spend</div>
+
+                <div className="flex items-start gap-3 rounded-lg border bg-card p-3 shadow-xs">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-blue-500/10 text-blue-500 mt-0.5">
+                    <GitBranch className="h-4 w-4" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="text-xs font-semibold text-foreground">
+                      2. Follow Incoming Traces
+                    </div>
+                    <div className="text-[11px] text-muted-foreground leading-relaxed">
+                      Click the <strong>Traces</strong> tab to watch agent executions live. Click any trace to inspect prompts, responses, duration, and token counts.
+                    </div>
+                  </div>
                 </div>
-                <div className="rounded-lg border p-3">
-                  <div className="font-medium">Error Tracking</div>
-                  <div className="mt-0.5 text-xs text-muted-foreground">Detect failures fast</div>
+
+                <div className="flex items-start gap-3 rounded-lg border bg-card p-3 shadow-xs">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-emerald-500/10 text-emerald-500 mt-0.5">
+                    <DollarSign className="h-4 w-4" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="text-xs font-semibold text-foreground">
+                      3. Cost Analytics & Alerts
+                    </div>
+                    <div className="text-[11px] text-muted-foreground leading-relaxed">
+                      Analyze which models cost the most and set up automated budget alerts via Slack, Email, or Webhooks.
+                    </div>
+                  </div>
                 </div>
-                <div className="rounded-lg border p-3">
-                  <div className="font-medium">Alerts</div>
-                  <div className="mt-0.5 text-xs text-muted-foreground">
-                    Slack, Email, Webhook
+
+                <div className="flex items-start gap-3 rounded-lg border bg-card p-3 shadow-xs">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-purple-500/10 text-purple-500 mt-0.5">
+                    <Sparkles className="h-4 w-4" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="text-xs font-semibold text-foreground">
+                      4. Monitor Quotas & Plans
+                    </div>
+                    <div className="text-[11px] text-muted-foreground leading-relaxed">
+                      Look at the bottom-left corner of your sidebar to check your monthly quota and upgrade your plan anytime.
+                    </div>
                   </div>
                 </div>
               </div>
+
               <Button
-                className="w-full"
+                className="w-full mt-2"
                 onClick={() => {
                   router.push("/dashboard");
                   router.refresh();
                 }}
               >
-                Go to dashboard <ArrowRight className="ml-2 h-4 w-4" />
+                Enter Dashboard <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </CardContent>
           </Card>

@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth";
+import { auth, signOut } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
@@ -38,9 +38,22 @@ export default async function DashboardLayout({
     (selectedId ? userProjects.find((p) => p.id === selectedId) : null) ??
     userProjects[0];
 
+  const user = {
+    name: session.user.name,
+    email: session.user.email,
+    plan: (session.user as { plan?: string }).plan ?? "free",
+  };
+
+  async function handleSignOut() {
+    "use server";
+    await signOut({ redirectTo: "/login" });
+  }
+
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       <Sidebar
+        user={user}
+        signOutAction={handleSignOut}
         projectSwitcher={
           <ProjectSwitcher
             projects={userProjects}
