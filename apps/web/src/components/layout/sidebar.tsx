@@ -20,6 +20,7 @@ import {
   LogOut,
   CreditCard,
   X,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -33,6 +34,7 @@ const navItems = [
   { href: "/dashboard/agents", label: "Agents", icon: Bot },
   { href: "/dashboard/models", label: "Models", icon: Cpu },
   { href: "/dashboard/alerts", label: "Alerts", icon: Bell },
+  { href: "/docs", label: "Docs", icon: BookOpen },
 ];
 
 interface SidebarUser {

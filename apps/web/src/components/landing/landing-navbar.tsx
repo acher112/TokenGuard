@@ -37,6 +37,9 @@ export function LandingNavbar({ isAuthenticated }: LandingNavbarProps) {
           <Link href="#pricing" className="hover:text-foreground transition-colors">
             Pricing
           </Link>
+          <Link href="/docs" className="hover:text-foreground transition-colors">
+            Docs
+          </Link>
           <Link
             href="/roadmap"
             className="hover:text-foreground transition-colors flex items-center gap-1"
@@ -123,6 +126,13 @@ export function LandingNavbar({ isAuthenticated }: LandingNavbarProps) {
               className="px-2 py-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
             >
               Pricing
+            </Link>
+            <Link
+              href="/docs"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-2 py-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Docs & SDKs
             </Link>
             <Link
               href="/roadmap"
