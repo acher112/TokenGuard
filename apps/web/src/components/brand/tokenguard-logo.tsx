@@ -10,22 +10,22 @@ interface TokenGuardIconProps {
  * TokenGuard Vector Brand Icon
  * Precision mathematical SVG reproduction of the modern interlocking TG monogram.
  */
-export function TokenGuardIcon({ className = "w-8 h-8", size }: TokenGuardIconProps) {
-  const style = size ? { width: size, height: size } : undefined;
+export function TokenGuardIcon({ className = "w-9 h-7", size }: TokenGuardIconProps) {
+  const style = size ? { width: size, height: typeof size === "number" ? size * 0.75 : undefined } : undefined;
 
   return (
     <svg
-      viewBox="0 0 120 90"
+      viewBox="0 0 110 80"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       style={style}
-      aria-label="TokenGuard Logo"
+      aria-label="TokenGuard TG Logo"
     >
       <defs>
         <linearGradient id="tg-t-grad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#4338CA" />
-          <stop offset="40%" stopColor="#4F46E5" />
+          <stop offset="50%" stopColor="#4F46E5" />
           <stop offset="100%" stopColor="#2563EB" />
         </linearGradient>
         <linearGradient id="tg-g-grad" x1="0%" y1="0%" x2="100%" y2="80%">
@@ -35,35 +35,38 @@ export function TokenGuardIcon({ className = "w-8 h-8", size }: TokenGuardIconPr
         </linearGradient>
       </defs>
 
-      {/* Letter T with curving right arc */}
+      {/* Bold Letter T */}
       <path
-        d="M 6 14
-           H 40
-           C 54 24, 62 38, 62 52
-           C 62 66, 54 80, 40 86
-           H 20
-           V 34
-           H 6
+        d="M 4 8 
+           H 48 
+           V 26 
+           H 34 
+           V 74 
+           H 16 
+           V 26 
+           H 4 
            Z"
         fill="url(#tg-t-grad)"
       />
 
-      {/* Letter G cradling the arc of T with clean negative space gap */}
+      {/* Bold Letter G */}
       <path
-        d="M 46 14
-           C 78 14, 114 26, 114 52
-           C 114 78, 78 88, 46 88
-           C 54 82, 60 74, 64 66
-           C 80 66, 94 60, 94 52
-           C 94 44, 80 36, 64 36
-           C 60 28, 54 20, 46 14
-           Z
-           M 66 45
-           H 114
-           V 59
-           H 84
-           V 59
-           H 66
+        d="M 52 8 
+           C 80 8 102 22 102 42 
+           C 102 62 80 74 52 74 
+           H 40 
+           V 56 
+           H 54 
+           C 70 56 82 50 82 42 
+           C 82 32 70 24 54 24 
+           H 52 
+           Z 
+           M 58 35 
+           H 100 
+           V 49 
+           H 74 
+           V 49 
+           H 58 
            Z"
         fill="url(#tg-g-grad)"
       />
