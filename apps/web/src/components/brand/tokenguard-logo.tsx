@@ -7,70 +7,20 @@ interface TokenGuardIconProps {
 }
 
 /**
- * TokenGuard Vector Brand Icon
- * Precision mathematical SVG reproduction of the modern interlocking TG monogram.
+ * TokenGuard Brand Icon
+ * Uses the exact TG monogram image with transparent background.
  */
-export function TokenGuardIcon({ className = "w-9 h-7", size }: TokenGuardIconProps) {
-  const style = size ? { width: size, height: typeof size === "number" ? size * 0.75 : undefined } : undefined;
+export function TokenGuardIcon({ className = "h-8 w-auto", size = 32 }: TokenGuardIconProps) {
+  const heightStyle = typeof size === "number" ? `${size}px` : size;
 
   return (
-    <svg
-      viewBox="0 0 110 80"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      style={style}
-      aria-label="TokenGuard TG Logo"
-    >
-      <defs>
-        <linearGradient id="tg-t-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#4338CA" />
-          <stop offset="50%" stopColor="#4F46E5" />
-          <stop offset="100%" stopColor="#2563EB" />
-        </linearGradient>
-        <linearGradient id="tg-g-grad" x1="0%" y1="0%" x2="100%" y2="80%">
-          <stop offset="0%" stopColor="#2563EB" />
-          <stop offset="50%" stopColor="#0EA5E9" />
-          <stop offset="100%" stopColor="#06B6D4" />
-        </linearGradient>
-      </defs>
-
-      {/* Bold Letter T */}
-      <path
-        d="M 4 8 
-           H 48 
-           V 26 
-           H 34 
-           V 74 
-           H 16 
-           V 26 
-           H 4 
-           Z"
-        fill="url(#tg-t-grad)"
-      />
-
-      {/* Bold Letter G */}
-      <path
-        d="M 52 8 
-           C 80 8 102 22 102 42 
-           C 102 62 80 74 52 74 
-           H 40 
-           V 56 
-           H 54 
-           C 70 56 82 50 82 42 
-           C 82 32 70 24 54 24 
-           H 52 
-           Z 
-           M 58 35 
-           H 100 
-           V 49 
-           H 74 
-           V 49 
-           H 58 
-           Z"
-        fill="url(#tg-g-grad)"
-      />
-    </svg>
+    <img
+      src="/brand/tg-logo.png"
+      alt="TokenGuard TG Logo"
+      className={`object-contain shrink-0 select-none ${className}`}
+      style={{ height: heightStyle, width: "auto" }}
+      loading="eager"
+    />
   );
 }
 
