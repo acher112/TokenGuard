@@ -18,7 +18,7 @@ import { wrapOpenAI, type WrapOpenAIOptions } from "./integrations/openai";
 import { wrapAnthropic, type WrapAnthropicOptions } from "./integrations/anthropic";
 import { wrapGemini, type WrapGeminiOptions } from "./integrations/gemini";
 
-const DEFAULT_BASE_URL = "https://tokenguard.dev";
+const DEFAULT_BASE_URL = "https://tokenguard-app-two.vercel.app";
 
 /**
  * TokenGuard Client — production developer SDK for monitoring AI agents and applications.

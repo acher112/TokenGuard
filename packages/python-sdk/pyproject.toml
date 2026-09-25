@@ -1,16 +1,16 @@
 [build-system]
 requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
 
 [project]
-name = "tokenguard"
+name = "tokenguard-sdk"
 version = "0.1.0"
-description = "Monitor AI agents, track LLM costs, debug failures"
+description = "Monitor AI agents, track LLM costs, debug failures — TokenGuard Python SDK"
 readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "TokenGuard" }]
 requires-python = ">=3.8"
-keywords = ["ai", "llm", "monitoring", "tracing", "openai", "groq", "cost"]
+keywords = ["ai", "llm", "monitoring", "tracing", "openai", "anthropic", "cost"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -29,11 +29,11 @@ dependencies = [
 
 [project.optional-dependencies]
 openai = ["openai>=1.0.0"]
-groq = ["groq>=0.4.0"]
+anthropic = ["anthropic>=0.18.0"]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/tokenguard"
-Documentation = "https://yourapp.com/docs"
+Homepage = "https://github.com/acher112/TokenGuard"
+Documentation = "https://tokenguard-app-two.vercel.app/docs"
 
 [tool.setuptools.packages.find]
 where = ["."]

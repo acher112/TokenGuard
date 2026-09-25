@@ -38,7 +38,9 @@ def _now_iso() -> str:
     return datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
 
-DEFAULT_BASE_URL = "https://tokenguard.dev"
+import os
+
+DEFAULT_BASE_URL = os.environ.get("TOKENGUARD_BASE_URL", "https://tokenguard-app-two.vercel.app")
 
 
 class TokenGuard:
@@ -46,26 +48,29 @@ class TokenGuard:
     TokenGuard Python SDK client.
 
     Args:
-        api_key: Your TokenGuard API key (from the dashboard Settings page)
-        base_url: URL of your TokenGuard deployment (default: https://tokenguard.dev)
+        api_key: Your TokenGuard API key (from dashboard or TOKENGUARD_API_KEY env var)
+        base_url: URL of your TokenGuard deployment (default: https://tokenguard-app-two.vercel.app)
         debug: Print debug logs (default: False)
     """
 
     def __init__(
         self,
-        api_key: str,
-        base_url: str = DEFAULT_BASE_URL,
+        api_key: Optional[str] = None,
+        base_url: Optional[str] = None,
         debug: bool = False,
     ):
-        if not api_key:
-            raise ValueError("TokenGuard: api_key is required")
+        resolved_key = api_key or os.environ.get("TOKENGUARD_API_KEY")
+        if not resolved_key:
+            raise ValueError(
+                "TokenGuard: api_key is required. Pass api_key='tg_live_...' or set TOKENGUARD_API_KEY in your environment."
+            )
 
-        self._api_key = api_key
-        self._base_url = base_url.rstrip("/")
+        self._api_key = resolved_key
+        self._base_url = (base_url or DEFAULT_BASE_URL).rstrip("/")
         self._debug = debug
         self._transport = Transport(
-            api_key=api_key,
-            base_url=base_url,
+            api_key=self._api_key,
+            base_url=self._base_url,
             debug=debug,
         )
 
@@ -283,3 +288,16 @@ class _WrappedClient:
 
 def _wrap_client(client: Any, transport: Transport, agent_name: str, provider: str, session_id: Optional[str] = None) -> Any:
     return _WrappedClient(client, transport, agent_name, provider, session_id=session_id)
+
+
+def wrap_openai(client: Any, tg: Optional[TokenGuard] = None, agent_name: str = "OpenAIAgent", session_id: Optional[str] = None) -> Any:
+    """Convenience function to wrap an OpenAI client."""
+    guard = tg if tg is not None else TokenGuard()
+    return guard.wrap_openai(client, agent_name=agent_name, session_id=session_id)
+
+
+def wrap_groq(client: Any, tg: Optional[TokenGuard] = None, agent_name: str = "GroqAgent", session_id: Optional[str] = None) -> Any:
+    """Convenience function to wrap a Groq client."""
+    guard = tg if tg is not None else TokenGuard()
+    return guard.wrap_groq(client, agent_name=agent_name, session_id=session_id)
+
