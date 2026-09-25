@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { LandingPricingTable } from "@/components/landing/pricing-table";
 import { LandingCodeTabs } from "@/components/landing/code-tabs";
+import { LandingNavbar } from "@/components/landing/landing-navbar";
 
 export const metadata = {
   title: "TokenGuard — LLM Observability & Cost Waste Engine",
@@ -31,58 +32,8 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary/20">
-      {/* ─── Navigation Header ─────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 font-bold text-lg tracking-tight">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shadow-sm">
-              <Zap className="w-4 h-4 fill-current" />
-            </div>
-            <span>TokenGuard</span>
-          </Link>
-
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-            <Link href="#features" className="hover:text-foreground transition-colors">
-              Features
-            </Link>
-            <Link href="#differentiators" className="hover:text-foreground transition-colors">
-              Why TokenGuard
-            </Link>
-            <Link href="#code" className="hover:text-foreground transition-colors">
-              SDKs
-            </Link>
-            <Link href="#pricing" className="hover:text-foreground transition-colors">
-              Pricing
-            </Link>
-            <Link href="/roadmap" className="hover:text-foreground transition-colors flex items-center gap-1">
-              <span>Roadmap</span>
-              <span className="text-[10px] uppercase font-bold bg-primary/15 text-primary px-1.5 py-0.5 rounded">
-                Live
-              </span>
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-3">
-            {isAuthenticated ? (
-              <Button asChild size="sm">
-                <Link href="/dashboard" className="flex items-center gap-1.5">
-                  <span>Dashboard</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </Button>
-            ) : (
-              <>
-                <Button asChild variant="ghost" size="sm">
-                  <Link href="/login">Sign in</Link>
-                </Button>
-                <Button asChild size="sm">
-                  <Link href="/signup">Start Free →</Link>
-                </Button>
-              </>
-            )}
-          </div>
-        </div>
-      </header>
+      {/* ─── Responsive Navigation Header ─────────────────────────────────── */}
+      <LandingNavbar isAuthenticated={isAuthenticated} />
 
       <main>
         {/* ─── Hero Section ─────────────────────────────────────────────────── */}

@@ -1,7 +1,6 @@
 import { auth, signOut } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { Sidebar } from "@/components/layout/sidebar";
-import { Header } from "@/components/layout/header";
+import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { db } from "@/lib/db/client";
 import { projects } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -50,21 +49,17 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      <Sidebar
-        user={user}
-        signOutAction={handleSignOut}
-        projectSwitcher={
-          <ProjectSwitcher
-            projects={userProjects}
-            selectedProjectId={selectedProject!.id}
-          />
-        }
-      />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
-      </div>
-    </div>
+    <DashboardShell
+      user={user}
+      signOutAction={handleSignOut}
+      projectSwitcher={
+        <ProjectSwitcher
+          projects={userProjects}
+          selectedProjectId={selectedProject!.id}
+        />
+      }
+    >
+      {children}
+    </DashboardShell>
   );
 }

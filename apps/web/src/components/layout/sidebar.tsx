@@ -17,9 +17,9 @@ import {
   Settings2,
   ChevronDown,
   Sparkles,
-  ArrowUpRight,
   LogOut,
   CreditCard,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -45,9 +45,17 @@ interface SidebarProps {
   projectSwitcher?: React.ReactNode;
   user?: SidebarUser;
   signOutAction?: () => Promise<void>;
+  onClose?: () => void;
+  className?: string;
 }
 
-export function Sidebar({ projectSwitcher, user, signOutAction }: SidebarProps = {}) {
+export function Sidebar({
+  projectSwitcher,
+  user,
+  signOutAction,
+  onClose,
+  className,
+}: SidebarProps = {}) {
   const pathname = usePathname();
   const isSettingsActive = pathname.startsWith("/dashboard/settings");
   const [settingsOpen, setSettingsOpen] = useState(true);
@@ -56,17 +64,46 @@ export function Sidebar({ projectSwitcher, user, signOutAction }: SidebarProps =
   const userDisplayName = user?.name || user?.email?.split("@")[0] || "User";
   const userInitials = (userDisplayName[0] || "U").toUpperCase();
 
+  const handleLinkClick = () => {
+    if (onClose) onClose();
+  };
+
   return (
-    <aside className="flex h-full w-[var(--sidebar-width)] flex-col border-r bg-card select-none">
-      {/* Brand Logo */}
-      <div className="flex h-16 items-center gap-2.5 border-b px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-sm">
-          <Zap className="h-4 w-4 text-primary-foreground" />
-        </div>
-        <div className="flex flex-col">
-          <span className="text-base font-bold tracking-tight">TokenGuard</span>
-          <span className="text-[10px] text-muted-foreground font-mono -mt-1">AI Observability</span>
-        </div>
+    <aside
+      className={cn(
+        "flex h-full w-full max-w-[280px] sm:w-[var(--sidebar-width)] flex-col border-r bg-card select-none",
+        className
+      )}
+    >
+      {/* Brand Logo & Mobile Close Button */}
+      <div className="flex h-16 items-center justify-between border-b px-5">
+        <Link
+          href="/dashboard"
+          onClick={handleLinkClick}
+          className="flex items-center gap-2.5 transition-opacity hover:opacity-90"
+        >
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-xs">
+            <Zap className="h-4 w-4 text-primary-foreground" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-base font-bold tracking-tight">TokenGuard</span>
+            <span className="text-[10px] text-muted-foreground font-mono -mt-1">
+              AI Observability
+            </span>
+          </div>
+        </Link>
+
+        {onClose && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="h-8 w-8 md:hidden text-muted-foreground hover:text-foreground"
+            aria-label="Close navigation"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        )}
       </div>
 
       {/* Project Switcher */}
@@ -83,6 +120,7 @@ export function Sidebar({ projectSwitcher, user, signOutAction }: SidebarProps =
             <Link
               key={item.href}
               href={item.href}
+              onClick={handleLinkClick}
               className={cn(
                 "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive
@@ -124,6 +162,7 @@ export function Sidebar({ projectSwitcher, user, signOutAction }: SidebarProps =
             <div className="mt-1 space-y-1 pl-6">
               <Link
                 href="/dashboard/settings/api-keys"
+                onClick={handleLinkClick}
                 className={cn(
                   "flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
                   pathname.startsWith("/dashboard/settings/api-keys")
@@ -137,6 +176,7 @@ export function Sidebar({ projectSwitcher, user, signOutAction }: SidebarProps =
 
               <Link
                 href="/dashboard/settings/project"
+                onClick={handleLinkClick}
                 className={cn(
                   "flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
                   pathname.startsWith("/dashboard/settings/project")
@@ -156,7 +196,7 @@ export function Sidebar({ projectSwitcher, user, signOutAction }: SidebarProps =
       <div className="border-t p-3 bg-muted/20">
         <div className="rounded-lg border bg-card p-3 shadow-xs space-y-2.5">
           {/* User Profile Row */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 font-semibold text-xs text-primary">
                 {userInitials}
@@ -184,6 +224,7 @@ export function Sidebar({ projectSwitcher, user, signOutAction }: SidebarProps =
           <div className="flex items-center gap-1.5 pt-1 border-t">
             <Link
               href="/dashboard/billing"
+              onClick={handleLinkClick}
               className={cn(
                 "flex-1 flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition-colors",
                 pathname === "/dashboard/billing"

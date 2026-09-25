@@ -35,7 +35,7 @@ export function LandingPricingTable({ isAuthenticated }: { isAuthenticated?: boo
       subtext: interval === "annual" ? "Save $98 per year (17% off)" : "Billed monthly",
       description: "For growing teams building production AI agents that need cost protection and collaboration.",
       cta: isAuthenticated ? "Upgrade to Pro" : "Start 14-Day Trial",
-      ctaHref: isAuthenticated ? "/dashboard/settings" : "/signup?plan=pro",
+      ctaHref: isAuthenticated ? "/dashboard/billing" : "/signup?plan=pro",
       ctaVariant: "default" as const,
       highlight: true,
       features: [
