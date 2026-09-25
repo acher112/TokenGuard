@@ -34,14 +34,6 @@ export default async function TracesPage({ searchParams }: Props) {
 
   if (!project) return null;
 
-  // Retrieve distinct agents for filter dropdown
-  const distinctAgents = await db
-    .selectDistinct({ agentName: traces.agentName })
-    .from(traces)
-    .where(eq(traces.projectId, project.id));
-
-  const agentsList = distinctAgents.map((a) => a.agentName);
-
   // Parse filters
   const page = Math.max(1, parseInt(searchParams.page ?? "1", 10));
   const offset = (page - 1) * PAGE_SIZE;
@@ -65,20 +57,26 @@ export default async function TracesPage({ searchParams }: Props) {
 
   const whereClause = and(...filterConditions);
 
-  // Fetch paginated traces
-  const traceRows = await db
-    .select()
-    .from(traces)
-    .where(whereClause)
-    .orderBy(desc(traces.startedAt))
-    .limit(PAGE_SIZE)
-    .offset(offset);
+  // Fetch paginated traces, total count, and distinct agents simultaneously
+  const [traceRows, [countResult], distinctAgents] = await Promise.all([
+    db
+      .select()
+      .from(traces)
+      .where(whereClause)
+      .orderBy(desc(traces.startedAt))
+      .limit(PAGE_SIZE)
+      .offset(offset),
+    db
+      .select({ totalCount: sql<number>`count(*)::int` })
+      .from(traces)
+      .where(whereClause),
+    db
+      .selectDistinct({ agentName: traces.agentName })
+      .from(traces)
+      .where(eq(traces.projectId, project.id)),
+  ]);
 
-  // Total count for pagination
-  const [countResult] = await db
-    .select({ totalCount: sql<number>`count(*)::int` })
-    .from(traces)
-    .where(whereClause);
+  const agentsList = distinctAgents.map((a) => a.agentName);
 
   const totalCount = countResult?.totalCount ?? 0;
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));

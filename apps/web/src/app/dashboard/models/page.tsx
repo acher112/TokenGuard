@@ -20,24 +20,24 @@ export default async function ModelsPage() {
 
   if (!project) return null;
 
-  // 1. Query LLM calls for this project
-  const projectCalls = await db
-    .select({
-      modelName: llmCalls.modelName,
-      provider: llmCalls.provider,
-      inputTokens: llmCalls.inputTokens,
-      outputTokens: llmCalls.outputTokens,
-      cost: llmCalls.estimatedCostUsd,
-    })
-    .from(llmCalls)
-    .innerJoin(traces, eq(llmCalls.traceId, traces.id))
-    .where(eq(traces.projectId, project.id));
-
-  // 2. Query configured model pricing
-  const pricingTable = await db
-    .select()
-    .from(modelPricing)
-    .orderBy(modelPricing.provider, modelPricing.modelName);
+  // Query project LLM calls and model pricing table in parallel
+  const [projectCalls, pricingTable] = await Promise.all([
+    db
+      .select({
+        modelName: llmCalls.modelName,
+        provider: llmCalls.provider,
+        inputTokens: llmCalls.inputTokens,
+        outputTokens: llmCalls.outputTokens,
+        cost: llmCalls.estimatedCostUsd,
+      })
+      .from(llmCalls)
+      .innerJoin(traces, eq(llmCalls.traceId, traces.id))
+      .where(eq(traces.projectId, project.id)),
+    db
+      .select()
+      .from(modelPricing)
+      .orderBy(modelPricing.provider, modelPricing.modelName),
+  ]);
 
   // Aggregate observed model metrics
   const modelStats = new Map<

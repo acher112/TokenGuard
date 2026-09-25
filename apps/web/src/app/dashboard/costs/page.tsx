@@ -32,38 +32,113 @@ export default async function CostsPage() {
   // Current Month Boundaries
   const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const startOfPrevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const thirtyDaysAgo = new Date(now);
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-  // 1. This Month Total Cost
-  const thisMonthTraces = await db
-    .select({
-      totalCost: traces.totalCostUsd,
-    })
-    .from(traces)
-    .where(
-      and(
-        eq(traces.projectId, project.id),
-        gte(traces.startedAt, startOfThisMonth)
-      )
-    );
+  // Execute all 8 analytics queries simultaneously in parallel for maximum speed
+  const [
+    thisMonthTraces,
+    prevMonthTraces,
+    recentTraces,
+    modelCalls,
+    allProjectTraces,
+    expensiveTraces,
+    projectToolCalls,
+    projectErrors,
+  ] = await Promise.all([
+    // 1. This Month Total Cost
+    db
+      .select({ totalCost: traces.totalCostUsd })
+      .from(traces)
+      .where(
+        and(
+          eq(traces.projectId, project.id),
+          gte(traces.startedAt, startOfThisMonth)
+        )
+      ),
+
+    // 2. Previous Month Total Cost
+    db
+      .select({ totalCost: traces.totalCostUsd })
+      .from(traces)
+      .where(
+        and(
+          eq(traces.projectId, project.id),
+          gte(traces.startedAt, startOfPrevMonth),
+          lt(traces.startedAt, startOfThisMonth)
+        )
+      ),
+
+    // 3. 30-Day Daily Spending Trend
+    db
+      .select({ startedAt: traces.startedAt, cost: traces.totalCostUsd })
+      .from(traces)
+      .where(
+        and(
+          eq(traces.projectId, project.id),
+          gte(traces.startedAt, thirtyDaysAgo)
+        )
+      ),
+
+    // 4. Breakdown by Model
+    db
+      .select({
+        modelName: llmCalls.modelName,
+        cost: llmCalls.estimatedCostUsd,
+        inputTokens: llmCalls.inputTokens,
+        outputTokens: llmCalls.outputTokens,
+      })
+      .from(llmCalls)
+      .innerJoin(traces, eq(llmCalls.traceId, traces.id))
+      .where(eq(traces.projectId, project.id)),
+
+    // 5. Breakdown by Agent
+    db
+      .select({
+        agentName: traces.agentName,
+        cost: traces.totalCostUsd,
+        durationMs: traces.durationMs,
+      })
+      .from(traces)
+      .where(eq(traces.projectId, project.id)),
+
+    // 6. Top Most Expensive Individual Requests
+    db
+      .select()
+      .from(traces)
+      .where(eq(traces.projectId, project.id))
+      .orderBy(desc(sql<number>`CAST(${traces.totalCostUsd} AS NUMERIC)`))
+      .limit(5),
+
+    // 7. Tool calls for cost waste
+    db
+      .select({
+        id: toolCalls.id,
+        traceId: toolCalls.traceId,
+        toolName: toolCalls.toolName,
+        argumentsJson: toolCalls.argumentsJson,
+      })
+      .from(toolCalls)
+      .innerJoin(traces, eq(toolCalls.traceId, traces.id))
+      .where(eq(traces.projectId, project.id)),
+
+    // 8. Errors for cost waste
+    db
+      .select({
+        id: errors.id,
+        traceId: errors.traceId,
+        errorType: errors.errorType,
+        retryCount: errors.retryCount,
+        wastedCostUsd: errors.wastedCostUsd,
+      })
+      .from(errors)
+      .where(eq(errors.projectId, project.id)),
+  ]);
 
   const thisMonthCost = thisMonthTraces.reduce(
     (acc, t) => acc + parseFloat(t.totalCost || "0"),
     0
   );
-
-  // 2. Previous Month Total Cost
-  const prevMonthTraces = await db
-    .select({
-      totalCost: traces.totalCostUsd,
-    })
-    .from(traces)
-    .where(
-      and(
-        eq(traces.projectId, project.id),
-        gte(traces.startedAt, startOfPrevMonth),
-        lt(traces.startedAt, startOfThisMonth)
-      )
-    );
 
   const prevMonthCost = prevMonthTraces.reduce(
     (acc, t) => acc + parseFloat(t.totalCost || "0"),
@@ -78,23 +153,7 @@ export default async function CostsPage() {
     pctChange = 100;
   }
 
-  // 3. 30-Day Daily Spending Trend
-  const thirtyDaysAgo = new Date(now);
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-  const recentTraces = await db
-    .select({
-      startedAt: traces.startedAt,
-      cost: traces.totalCostUsd,
-    })
-    .from(traces)
-    .where(
-      and(
-        eq(traces.projectId, project.id),
-        gte(traces.startedAt, thirtyDaysAgo)
-      )
-    );
-
+  // 3. Process 30-Day Daily Spending Trend
   const dailyMap = new Map<string, { cost: number; requests: number }>();
   for (let i = 29; i >= 0; i--) {
     const d = new Date(now);
@@ -119,18 +178,7 @@ export default async function CostsPage() {
     requests: val.requests,
   }));
 
-  // 4. Breakdown by Model
-  const modelCalls = await db
-    .select({
-      modelName: llmCalls.modelName,
-      cost: llmCalls.estimatedCostUsd,
-      inputTokens: llmCalls.inputTokens,
-      outputTokens: llmCalls.outputTokens,
-    })
-    .from(llmCalls)
-    .innerJoin(traces, eq(llmCalls.traceId, traces.id))
-    .where(eq(traces.projectId, project.id));
-
+  // 4. Process Breakdown by Model
   const modelMap = new Map<string, { cost: number; tokens: number; calls: number }>();
   for (const call of modelCalls) {
     const model = call.modelName || "unknown";
@@ -150,16 +198,7 @@ export default async function CostsPage() {
     }))
     .sort((a, b) => b.value - a.value);
 
-  // 5. Breakdown by Agent
-  const allProjectTraces = await db
-    .select({
-      agentName: traces.agentName,
-      cost: traces.totalCostUsd,
-      durationMs: traces.durationMs,
-    })
-    .from(traces)
-    .where(eq(traces.projectId, project.id));
-
+  // 5. Process Breakdown by Agent
   const agentMap = new Map<string, { cost: number; traces: number }>();
   for (const t of allProjectTraces) {
     const current = agentMap.get(t.agentName) ?? { cost: 0, traces: 0 };
@@ -175,38 +214,6 @@ export default async function CostsPage() {
       traces: data.traces,
     }))
     .sort((a, b) => b.cost - a.cost);
-
-  // 6. Top Most Expensive Individual Requests
-  const expensiveTraces = await db
-    .select()
-    .from(traces)
-    .where(eq(traces.projectId, project.id))
-    .orderBy(desc(sql<number>`CAST(${traces.totalCostUsd} AS NUMERIC)`))
-    .limit(5);
-
-  // 7. Cost Waste Analysis
-  const [projectToolCalls, projectErrors] = await Promise.all([
-    db
-      .select({
-        id: toolCalls.id,
-        traceId: toolCalls.traceId,
-        toolName: toolCalls.toolName,
-        argumentsJson: toolCalls.argumentsJson,
-      })
-      .from(toolCalls)
-      .innerJoin(traces, eq(toolCalls.traceId, traces.id))
-      .where(eq(traces.projectId, project.id)),
-    db
-      .select({
-        id: errors.id,
-        traceId: errors.traceId,
-        errorType: errors.errorType,
-        retryCount: errors.retryCount,
-        wastedCostUsd: errors.wastedCostUsd,
-      })
-      .from(errors)
-      .where(eq(errors.projectId, project.id)),
-  ]);
 
   const wasteReport = analyzeCostWaste({
     traces: allProjectTraces.map((t, idx) => ({

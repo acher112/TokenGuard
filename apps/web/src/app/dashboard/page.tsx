@@ -29,20 +29,42 @@ export default async function DashboardPage() {
   const sevenDaysAgo = new Date(now);
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-  // Overall 30-day KPIs — fetch raw rows and sum in JS
-  // (totalCostUsd is stored as text; PostgreSQL sum() doesn't work on text)
-  const thirtyDayTraces = await db
-    .select({
-      totalCostUsd: traces.totalCostUsd,
-      durationMs: traces.durationMs,
-    })
-    .from(traces)
-    .where(
-      and(
-        eq(traces.projectId, project.id),
-        gte(traces.startedAt, thirtyDaysAgo)
-      )
-    );
+  // Execute 30-day KPI query, error counts, and weekly trend query in parallel
+  const [thirtyDayTraces, [errorStats], weekTraces] = await Promise.all([
+    db
+      .select({
+        totalCostUsd: traces.totalCostUsd,
+        durationMs: traces.durationMs,
+      })
+      .from(traces)
+      .where(
+        and(
+          eq(traces.projectId, project.id),
+          gte(traces.startedAt, thirtyDaysAgo)
+        )
+      ),
+    db
+      .select({ totalErrors: count(errors.id) })
+      .from(errors)
+      .where(
+        and(
+          eq(errors.projectId, project.id),
+          gte(errors.occurredAt, thirtyDaysAgo)
+        )
+      ),
+    db
+      .select({
+        startedAt: traces.startedAt,
+        totalCostUsd: traces.totalCostUsd,
+      })
+      .from(traces)
+      .where(
+        and(
+          eq(traces.projectId, project.id),
+          gte(traces.startedAt, sevenDaysAgo)
+        )
+      ),
+  ]);
 
   const stats = {
     totalTraces: thirtyDayTraces.length,
@@ -57,30 +79,6 @@ export default async function DashboardPage() {
           ).toString()
         : "0",
   };
-
-  const [errorStats] = await db
-    .select({ totalErrors: count(errors.id) })
-    .from(errors)
-    .where(
-      and(
-        eq(errors.projectId, project.id),
-        gte(errors.occurredAt, thirtyDaysAgo)
-      )
-    );
-
-  // 7-day daily data for chart
-  const weekTraces = await db
-    .select({
-      startedAt: traces.startedAt,
-      totalCostUsd: traces.totalCostUsd,
-    })
-    .from(traces)
-    .where(
-      and(
-        eq(traces.projectId, project.id),
-        gte(traces.startedAt, sevenDaysAgo)
-      )
-    );
 
   // Group by day of week
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
