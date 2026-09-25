@@ -64,16 +64,15 @@ console.log(response.choices[0].message.content);`,
         "wrapOpenAI wraps your standard OpenAI instance. It measures token counts, request duration, calculates exact model costs, and uploads traces in the background without slowing down your app.",
     },
     "openai-py": {
-      install: "pip install tokenguard openai",
+      install: "pip install tokenguard-sdk openai",
       linesHighlight: "Only 2 lines added to existing Python OpenAI script",
       code: `import os
 from tokenguard import TokenGuard, wrap_openai
 from openai import OpenAI
 
-# 1. Initialize TokenGuard
+# 1. Initialize TokenGuard (baseUrl defaults to your live platform)
 tg = TokenGuard(
-    api_key=os.environ.get("TOKENGUARD_API_KEY", "${apiKey}"),
-    base_url="${baseUrl}"  # Live TokenGuard server
+    api_key=os.environ.get("TOKENGUARD_API_KEY", "${apiKey}")
 )
 
 # 2. Wrap standard OpenAI client
@@ -122,15 +121,14 @@ console.log(message.content);`,
         "Captures Claude prompt tokens, completion tokens, prompt caching savings, and calculates cost based on Anthropic official pricing.",
     },
     "anthropic-py": {
-      install: "pip install tokenguard anthropic",
+      install: "pip install tokenguard-sdk anthropic",
       linesHighlight: "Python client for Anthropic Claude models",
       code: `import os
 from tokenguard import TokenGuard, wrap_anthropic
 from anthropic import Anthropic
 
 tg = TokenGuard(
-    api_key=os.environ.get("TOKENGUARD_API_KEY", "${apiKey}"),
-    base_url="${baseUrl}"
+    api_key=os.environ.get("TOKENGUARD_API_KEY", "${apiKey}")
 )
 
 client = wrap_anthropic(

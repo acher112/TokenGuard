@@ -151,7 +151,7 @@ export default function DocsPage() {
                 <div className="p-3.5 rounded-lg border bg-card space-y-1">
                   <div className="text-xs font-semibold text-foreground">1. Install SDK</div>
                   <p className="text-xs text-muted-foreground">
-                    <code>npm install @tokenguard/sdk</code> or <code>pip install tokenguard</code>
+                    <code>npm install @tokenguard/sdk</code> or <code>pip install tokenguard-sdk</code>
                   </p>
                 </div>
                 <div className="p-3.5 rounded-lg border bg-card space-y-1">
