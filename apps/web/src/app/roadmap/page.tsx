@@ -6,6 +6,7 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
+import { TokenGuardLogo } from "@/components/brand/tokenguard-logo";
 
 export const metadata: Metadata = {
   title: "Roadmap — TokenGuard",
@@ -188,9 +189,7 @@ export default function RoadmapPage() {
       {/* Header */}
       <div className="border-b bg-background/95 backdrop-blur sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-semibold text-lg">
-            <span className="text-primary">⚡</span> TokenGuard
-          </Link>
+          <TokenGuardLogo href="/" iconSize={28} />
           <div className="flex items-center gap-3">
             <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Sign in

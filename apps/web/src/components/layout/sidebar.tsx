@@ -23,6 +23,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TokenGuardLogo } from "@/components/brand/tokenguard-logo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -79,21 +80,12 @@ export function Sidebar({
     >
       {/* Brand Logo & Mobile Close Button */}
       <div className="flex h-16 items-center justify-between border-b px-5">
-        <Link
+        <TokenGuardLogo
           href="/dashboard"
           onClick={handleLinkClick}
-          className="flex items-center gap-2.5 transition-opacity hover:opacity-90"
-        >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-xs">
-            <Zap className="h-4 w-4 text-primary-foreground" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-base font-bold tracking-tight">TokenGuard</span>
-            <span className="text-[10px] text-muted-foreground font-mono -mt-1">
-              AI Observability
-            </span>
-          </div>
-        </Link>
+          showSubtitle
+          iconSize={32}
+        />
 
         {onClose && (
           <Button

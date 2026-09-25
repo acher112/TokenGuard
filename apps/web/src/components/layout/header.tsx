@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Menu, Zap } from "lucide-react";
 import Link from "next/link";
 
+import { TokenGuardLogo } from "@/components/brand/tokenguard-logo";
+
 interface HeaderProps {
   userEmail?: string | null;
   userPlan?: string;
@@ -34,12 +36,7 @@ export function Header({
           </Button>
         )}
 
-        <div className="md:hidden flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Zap className="h-3.5 w-3.5" />
-          </div>
-          <span className="font-bold text-sm tracking-tight">TokenGuard</span>
-        </div>
+        <TokenGuardLogo className="md:hidden" iconSize={26} />
       </div>
 
       {/* User info & Actions */}

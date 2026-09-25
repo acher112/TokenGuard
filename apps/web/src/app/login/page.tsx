@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Zap } from "lucide-react";
+import { TokenGuardLogo } from "@/components/brand/tokenguard-logo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -42,11 +42,8 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
       <div className="w-full max-w-sm space-y-6">
         {/* Logo */}
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
-            <Zap className="h-5 w-5 text-primary-foreground" />
-          </div>
-          <h1 className="text-2xl font-bold">TokenGuard</h1>
+        <div className="flex justify-center pb-2">
+          <TokenGuardLogo href="/" iconSize={40} showSubtitle />
         </div>
 
         <Card>

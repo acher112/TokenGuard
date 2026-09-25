@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { LandingPricingTable } from "@/components/landing/pricing-table";
 import { LandingCodeTabs } from "@/components/landing/code-tabs";
 import { LandingNavbar } from "@/components/landing/landing-navbar";
+import { TokenGuardLogo } from "@/components/brand/tokenguard-logo";
 
 export const metadata = {
   title: "TokenGuard — LLM Observability & Cost Waste Engine",
@@ -452,11 +453,8 @@ export default async function HomePage() {
       <footer className="border-t py-12 bg-muted/20 text-sm text-muted-foreground">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           <div className="col-span-2">
-            <div className="flex items-center gap-2 font-bold text-base text-foreground mb-3">
-              <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center text-primary-foreground">
-                <Zap className="w-3.5 h-3.5 fill-current" />
-              </div>
-              <span>TokenGuard</span>
+            <div className="mb-3">
+              <TokenGuardLogo iconSize={26} />
             </div>
             <p className="text-xs text-muted-foreground max-w-sm leading-relaxed mb-4">
               Production LLM observability, proactive cost waste detection, and hard spend enforcement for AI agents.

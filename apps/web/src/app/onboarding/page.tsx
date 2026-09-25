@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { TokenGuardIcon } from "@/components/brand/tokenguard-logo";
 import {
   Zap,
   ArrowRight,
@@ -115,8 +116,8 @@ export default function OnboardingPage() {
       <div className="w-full max-w-xl space-y-6">
         {/* Header */}
         <div className="flex flex-col items-center gap-2 text-center">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-            <Zap className="h-5 w-5" />
+          <div className="flex justify-center pb-1">
+            <TokenGuardIcon size={48} />
           </div>
           <h1 className="text-2xl font-bold tracking-tight">Welcome to TokenGuard</h1>
           <p className="text-sm text-muted-foreground">

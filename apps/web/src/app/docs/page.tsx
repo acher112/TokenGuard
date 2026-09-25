@@ -15,6 +15,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { TokenGuardLogo } from "@/components/brand/tokenguard-logo";
 
 export const metadata: Metadata = {
   title: "Documentation — TokenGuard SDK & API Reference",
@@ -31,12 +32,7 @@ export default function DocsPage() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2.5 font-bold text-lg tracking-tight">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shadow-xs">
-                <Zap className="w-4 h-4 fill-current" />
-              </div>
-              <span>TokenGuard</span>
-            </Link>
+            <TokenGuardLogo href="/" iconSize={30} />
             <span className="hidden sm:inline-block text-xs font-mono bg-muted px-2 py-0.5 rounded text-muted-foreground">
               Docs v0.1.0
             </span>
