@@ -42,7 +42,10 @@ export async function POST(request: Request) {
       returnUrl,
     });
 
-    return NextResponse.json({ checkoutUrl: checkoutSession.url });
+    return NextResponse.json({
+      checkoutUrl: checkoutSession.url,
+      transactionId: checkoutSession.id,
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Billing unavailable";
     return NextResponse.json({ error: message }, { status: 503 });

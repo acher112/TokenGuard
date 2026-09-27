@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Script from "next/script";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -84,6 +85,20 @@ export function PlanCard({ usage }: PlanCardProps) {
       ? 0
       : Math.min(Math.round((usage.projectCount / usage.projectLimit) * 100), 100);
 
+  useEffect(() => {
+    function initPaddle() {
+      const clientToken = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN;
+      if (typeof window !== "undefined" && (window as any).Paddle) {
+        const isProd = process.env.NEXT_PUBLIC_PADDLE_ENV === "production";
+        (window as any).Paddle.Environment.set(isProd ? "production" : "sandbox");
+        if (clientToken) {
+          (window as any).Paddle.Initialize({ token: clientToken });
+        }
+      }
+    }
+    initPaddle();
+  }, []);
+
   async function handleUpgrade(targetPlan: "pro" | "team") {
     setLoadingCheckout(true);
     try {
@@ -93,7 +108,11 @@ export function PlanCard({ usage }: PlanCardProps) {
         body: JSON.stringify({ plan: targetPlan, interval: billingInterval }),
       });
       const data = await res.json();
-      if (data.checkoutUrl) {
+      if ((window as any).Paddle?.Checkout?.open && (data.transactionId || data.id)) {
+        (window as any).Paddle.Checkout.open({
+          transactionId: data.transactionId || data.id,
+        });
+      } else if (data.checkoutUrl) {
         window.location.href = data.checkoutUrl;
       } else {
         alert(data.error ?? "Failed to create checkout session");
@@ -297,6 +316,20 @@ export function PlanCard({ usage }: PlanCardProps) {
         </div>
 
       </CardContent>
+      <Script
+        src="https://cdn.paddle.com/paddle/v2/paddle.js"
+        strategy="afterInteractive"
+        onLoad={() => {
+          const clientToken = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN;
+          if (typeof window !== "undefined" && (window as any).Paddle) {
+            const isProd = process.env.NEXT_PUBLIC_PADDLE_ENV === "production";
+            (window as any).Paddle.Environment.set(isProd ? "production" : "sandbox");
+            if (clientToken) {
+              (window as any).Paddle.Initialize({ token: clientToken });
+            }
+          }
+        }}
+      />
     </Card>
   );
 }
