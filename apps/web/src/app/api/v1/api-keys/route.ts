@@ -5,7 +5,7 @@ import { db } from "@/lib/db/client";
 import { projects, apiKeys } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { generateApiKey, maskKeyPrefix } from "@/lib/api-keys";
-import { PLAN_LIMITS } from "@/lib/billing";
+import { PLAN_LIMITS, getUserPlan } from "@/lib/billing";
 
 const createKeySchema = z.object({
   projectId: z.string().min(1),
@@ -95,8 +95,8 @@ export async function POST(request: Request) {
   }
 
   // Enforce plan API key limits
-  const plan = (session.user as { plan?: string }).plan ?? "free";
-  const limits = PLAN_LIMITS[plan as keyof typeof PLAN_LIMITS];
+  const plan = await getUserPlan(session.user.id);
+  const limits = PLAN_LIMITS[plan];
   const existingCount = await db
     .select()
     .from(apiKeys)

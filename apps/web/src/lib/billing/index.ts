@@ -12,6 +12,7 @@ import { PLAN_LIMITS as _PLAN_LIMITS } from "./interface";
 import { PaddleBillingProvider } from "./paddle";
 import { LemonSqueezyBillingProvider } from "./lemon-squeezy";
 export { PLAN_LIMITS } from "./interface";
+export { getUserPlan, getUserUsageSummary } from "./usage";
 export type { Plan, PlanLimits, BillingProvider };
 
 // ─── Stub billing provider (for local dev / no-billing env) ───────────────────

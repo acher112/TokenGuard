@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db/client";
 import { projects } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
-import { PLAN_LIMITS } from "@/lib/billing";
+import { PLAN_LIMITS, getUserPlan } from "@/lib/billing";
 
 const createProjectSchema = z.object({
   name: z.string().min(1).max(50).trim(),
@@ -43,8 +43,8 @@ export async function POST(request: Request) {
   }
 
   // Enforce plan project limits
-  const plan = (session.user as { plan?: string }).plan ?? "free";
-  const limits = PLAN_LIMITS[plan as keyof typeof PLAN_LIMITS];
+  const plan = await getUserPlan(session.user.id);
+  const limits = PLAN_LIMITS[plan];
   const existingCount = await db
     .select()
     .from(projects)

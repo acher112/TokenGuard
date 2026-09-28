@@ -6,27 +6,36 @@
  */
 
 import { db } from "@/lib/db/client";
-import { traces, projects, subscriptions } from "@/lib/db/schema";
+import { traces, projects, subscriptions, users } from "@/lib/db/schema";
 import { eq, and, gte, count } from "drizzle-orm";
 import { PLAN_LIMITS } from "./interface";
 import type { Plan } from "./interface";
 
 /**
  * Get the current plan for a user.
- * Falls back to "free" if no subscription row exists.
+ * Checks subscriptions table, and falls back to users.plan.
  */
 export async function getUserPlan(userId: string): Promise<Plan> {
-  const sub = await db
-    .select({ plan: subscriptions.plan, status: subscriptions.status })
-    .from(subscriptions)
-    .where(eq(subscriptions.userId, userId))
-    .limit(1)
-    .then((r) => r[0]);
+  const [sub, user] = await Promise.all([
+    db
+      .select({ plan: subscriptions.plan, status: subscriptions.status })
+      .from(subscriptions)
+      .where(eq(subscriptions.userId, userId))
+      .limit(1)
+      .then((r) => r[0]),
+    db
+      .select({ plan: users.plan })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1)
+      .then((r) => r[0]),
+  ]);
 
-  if (!sub) return "free";
-  // Only active/trialing subscriptions grant the paid tier
-  if (sub.status === "active" || sub.status === "trialing") {
+  if (sub && (sub.status === "active" || sub.status === "trialing")) {
     return sub.plan;
+  }
+  if (user && user.plan && user.plan !== "free") {
+    return user.plan;
   }
   return "free";
 }

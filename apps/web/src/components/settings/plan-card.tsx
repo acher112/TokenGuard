@@ -85,6 +85,40 @@ export function PlanCard({ usage }: PlanCardProps) {
       ? 0
       : Math.min(Math.round((usage.projectCount / usage.projectLimit) * 100), 100);
 
+  const [syncing, setSyncing] = useState(false);
+
+  async function handleSync(silent = false) {
+    if (syncing) return;
+    setSyncing(true);
+    try {
+      const res = await fetch("/api/v1/billing/sync", { method: "POST" });
+      const data = await res.json();
+      if (data.synced && data.plan && data.plan !== plan) {
+        window.location.href = "/dashboard/billing";
+      } else if (!silent) {
+        if (data.synced) {
+          alert(`Plan is up to date: ${PLAN_LABELS[data.plan as keyof typeof PLAN_LABELS] ?? data.plan}`);
+        } else {
+          alert(data.message ?? "No active subscription found for your account email yet.");
+        }
+      }
+    } catch {
+      if (!silent) alert("Failed to sync with Paddle. Please try again.");
+    } finally {
+      setSyncing(false);
+    }
+  }
+
+  // Automatic sync if user returned from checkout with ?_ptxn=
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hasTxn = window.location.search.includes("_ptxn");
+      if (hasTxn) {
+        handleSync(true);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     function initPaddle() {
       const clientToken = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN;
@@ -149,9 +183,20 @@ export function PlanCard({ usage }: PlanCardProps) {
             <CardTitle>Subscription Plan</CardTitle>
             <CardDescription>Your current plan and usage this month.</CardDescription>
           </div>
-          <Badge variant={PLAN_BADGE_VARIANTS[plan] ?? "outline"} className="text-sm px-3 py-1">
-            {PLAN_LABELS[plan] ?? plan} Plan
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleSync(false)}
+              disabled={syncing}
+              className="h-8 text-xs"
+            >
+              {syncing ? "Syncing..." : "Sync with Paddle"}
+            </Button>
+            <Badge variant={PLAN_BADGE_VARIANTS[plan] ?? "outline"} className="text-sm px-3 py-1">
+              {PLAN_LABELS[plan] ?? plan} Plan
+            </Badge>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
