@@ -104,10 +104,13 @@ export class PaddleBillingProvider implements BillingProvider {
       }),
     });
 
-    const checkoutUrl =
-      response.data.checkout?.url ??
-      response.data.url ??
-      `https://checkout.paddle.com/checkout/tx/${response.data.id}`;
+    // Always build the direct Paddle-hosted pay page URL.
+    // sandbox-pay.paddle.io for testing, pay.paddle.io for production.
+    const isSandbox = getPaddleApiBase().includes("sandbox");
+    const payDomain = isSandbox
+      ? "https://sandbox-pay.paddle.io"
+      : "https://pay.paddle.io";
+    const checkoutUrl = `${payDomain}/pay?_ptxn=${response.data.id}`;
 
     return {
       id: response.data.id,
