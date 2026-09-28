@@ -95,15 +95,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   // ── Callbacks ─────────────────────────────────────────────────────────────
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      // Persist plan and id in the JWT on first sign-in
+      // On first sign-in, persist id and plan
       if (user) {
         token.id = user.id;
         token.plan = (user as { plan?: string }).plan ?? "free";
       }
 
-      // When session is updated (e.g. after plan upgrade), refresh token
+      // On explicit session update (e.g. after plan upgrade)
       if (trigger === "update" && session?.plan) {
         token.plan = session.plan as string;
+      }
+
+      // Always re-fetch plan from DB on token refresh so upgrades reflect immediately
+      if (token.sub) {
+        const freshUser = await db
+          .select({ plan: users.plan })
+          .from(users)
+          .where(eq(users.id, token.sub))
+          .limit(1)
+          .then((r) => r[0]);
+        if (freshUser) {
+          token.plan = freshUser.plan;
+        }
       }
 
       return token;

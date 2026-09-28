@@ -205,15 +205,43 @@ export async function POST(request: Request) {
 
     const plan = mapPriceToPlan(priceId);
 
-    // For transaction.completed, just upgrade the user plan directly
+    // For transaction.completed, upgrade the user plan directly + upsert subscriptions
     if (eventType === "transaction.completed") {
-      if (userId && data.custom_data?.user_id) {
-        const effectivePlan: "free" | "pro" | "team" =
-          plan !== "free" ? plan : "free";
+      const txUserId: string | undefined = data.custom_data?.user_id;
+      if (txUserId && plan !== "free") {
+        // Update users table
         await db
           .update(users)
-          .set({ plan: effectivePlan, updatedAt: new Date() })
-          .where(eq(users.id, data.custom_data.user_id));
+          .set({ plan, updatedAt: new Date() })
+          .where(eq(users.id, txUserId));
+
+        // Upsert subscriptions table so getUserPlan() also returns correct plan
+        const txSubId = data.subscription_id ?? data.id;
+        const txCustomerId = data.customer_id ?? "";
+        await db
+          .insert(subscriptions)
+          .values({
+            userId: txUserId,
+            lsSubscriptionId: txSubId,
+            lsCustomerId: txCustomerId,
+            lsOrderId: data.id,
+            lsVariantId: priceId,
+            plan,
+            status: "active",
+            updatedAt: new Date(),
+          })
+          .onConflictDoUpdate({
+            target: subscriptions.userId,
+            set: {
+              lsSubscriptionId: txSubId,
+              lsCustomerId: txCustomerId,
+              lsOrderId: data.id,
+              lsVariantId: priceId,
+              plan,
+              status: "active",
+              updatedAt: new Date(),
+            },
+          });
       }
       return NextResponse.json({ received: true });
     }
