@@ -7,18 +7,12 @@ import { Badge } from "@/components/ui/badge";
 import { formatCost } from "@/lib/utils";
 import { Cpu, DollarSign, Zap } from "lucide-react";
 
+import { getSelectedProject } from "@/lib/get-selected-project";
+
 export default async function ModelsPage() {
-  const session = await auth();
-  if (!session?.user) return null;
-
-  const project = await db
-    .select()
-    .from(projects)
-    .where(eq(projects.userId, session.user.id))
-    .limit(1)
-    .then((r) => r[0]);
-
-  if (!project) return null;
+  const selected = await getSelectedProject();
+  if (!selected?.project) return null;
+  const project = selected.project;
 
   // Query project LLM calls and model pricing table in parallel
   const [projectCalls, pricingTable] = await Promise.all([

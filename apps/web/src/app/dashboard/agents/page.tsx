@@ -8,18 +8,12 @@ import { formatCost, formatDuration, formatRelativeTime } from "@/lib/utils";
 import Link from "next/link";
 import { Bot, ArrowRight, CheckCircle2, XCircle } from "lucide-react";
 
+import { getSelectedProject } from "@/lib/get-selected-project";
+
 export default async function AgentsPage() {
-  const session = await auth();
-  if (!session?.user) return null;
-
-  const project = await db
-    .select()
-    .from(projects)
-    .where(eq(projects.userId, session.user.id))
-    .limit(1)
-    .then((r) => r[0]);
-
-  if (!project) return null;
+  const selected = await getSelectedProject();
+  if (!selected?.project) return null;
+  const project = selected.project;
 
   // Retrieve all traces for project
   const allTraces = await db

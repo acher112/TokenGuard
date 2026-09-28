@@ -14,22 +14,14 @@ const createAlertSchema = z.object({
   destination: z.string().min(3).max(255),
 });
 
+import { getSelectedProject } from "@/lib/get-selected-project";
+
 export async function GET() {
-  const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const project = await db
-    .select()
-    .from(projects)
-    .where(eq(projects.userId, session.user.id))
-    .limit(1)
-    .then((r) => r[0]);
-
-  if (!project) {
+  const selected = await getSelectedProject();
+  if (!selected?.project) {
     return NextResponse.json({ error: "No project found" }, { status: 404 });
   }
+  const project = selected.project;
 
   const alertList = await db
     .select()
@@ -41,21 +33,11 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const project = await db
-    .select()
-    .from(projects)
-    .where(eq(projects.userId, session.user.id))
-    .limit(1)
-    .then((r) => r[0]);
-
-  if (!project) {
+  const selected = await getSelectedProject();
+  if (!selected?.project) {
     return NextResponse.json({ error: "No project found" }, { status: 404 });
   }
+  const project = selected.project;
 
   const body = await request.json().catch(() => null);
   const parsed = createAlertSchema.safeParse(body);

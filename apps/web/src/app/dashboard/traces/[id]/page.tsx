@@ -20,25 +20,17 @@ export default async function TraceDetailPage({ params }: Props) {
   const session = await auth();
   if (!session?.user) return null;
 
-  // Verify project ownership
-  const project = await db
-    .select()
-    .from(projects)
-    .where(eq(projects.userId, session.user.id))
-    .limit(1)
-    .then((r) => r[0]);
-
-  if (!project) notFound();
-
-  // Load the trace
-  const trace = await db
-    .select()
+  // Load the trace and ensure it belongs to this user
+  const traceRow = await db
+    .select({ trace: traces })
     .from(traces)
-    .where(and(eq(traces.id, params.id), eq(traces.projectId, project.id)))
+    .innerJoin(projects, eq(traces.projectId, projects.id))
+    .where(and(eq(traces.id, params.id), eq(projects.userId, session.user.id)))
     .limit(1)
     .then((r) => r[0]);
 
-  if (!trace) notFound();
+  if (!traceRow) notFound();
+  const trace = traceRow.trace;
 
   // Load all steps for this trace in sequence
   const stepRows = await db

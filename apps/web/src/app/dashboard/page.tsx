@@ -8,19 +8,12 @@ import { DollarSign, Activity, AlertCircle, Clock, ArrowRight } from "lucide-rea
 import Link from "next/link";
 import { CostChart, type DailyCostPoint } from "@/components/dashboard/cost-chart";
 
+import { getSelectedProject } from "@/lib/get-selected-project";
+
 export default async function DashboardPage() {
-  const session = await auth();
-  if (!session?.user) return null;
-
-  // Get user's active project
-  const project = await db
-    .select()
-    .from(projects)
-    .where(eq(projects.userId, session.user.id))
-    .limit(1)
-    .then((r) => r[0]);
-
-  if (!project) return null;
+  const selected = await getSelectedProject();
+  if (!selected?.project) return null;
+  const project = selected.project;
 
   const now = new Date();
   const thirtyDaysAgo = new Date(now);

@@ -7,18 +7,12 @@ import { formatCost } from "@/lib/utils";
 import { ErrorList, type AggregatedError } from "@/components/errors/error-list";
 import { AlertOctagon, DollarSign, Bug } from "lucide-react";
 
+import { getSelectedProject } from "@/lib/get-selected-project";
+
 export default async function ErrorsPage() {
-  const session = await auth();
-  if (!session?.user) return null;
-
-  const project = await db
-    .select()
-    .from(projects)
-    .where(eq(projects.userId, session.user.id))
-    .limit(1)
-    .then((r) => r[0]);
-
-  if (!project) return null;
+  const selected = await getSelectedProject();
+  if (!selected?.project) return null;
+  const project = selected.project;
 
   // Query all errors joined with traces for project
   const errorRecords = await db

@@ -21,18 +21,12 @@ interface Props {
 
 const PAGE_SIZE = 25;
 
+import { getSelectedProject } from "@/lib/get-selected-project";
+
 export default async function TracesPage({ searchParams }: Props) {
-  const session = await auth();
-  if (!session?.user) return null;
-
-  const project = await db
-    .select()
-    .from(projects)
-    .where(eq(projects.userId, session.user.id))
-    .limit(1)
-    .then((r) => r[0]);
-
-  if (!project) return null;
+  const selected = await getSelectedProject();
+  if (!selected?.project) return null;
+  const project = selected.project;
 
   // Parse filters
   const page = Math.max(1, parseInt(searchParams.page ?? "1", 10));

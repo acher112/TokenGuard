@@ -14,18 +14,12 @@ import { toolCalls, errors } from "@/lib/db/schema";
 import Link from "next/link";
 import { ArrowUpRight, ArrowDownRight, DollarSign, TrendingUp, AlertTriangle } from "lucide-react";
 
+import { getSelectedProject } from "@/lib/get-selected-project";
+
 export default async function CostsPage() {
-  const session = await auth();
-  if (!session?.user) return null;
-
-  const project = await db
-    .select()
-    .from(projects)
-    .where(eq(projects.userId, session.user.id))
-    .limit(1)
-    .then((r) => r[0]);
-
-  if (!project) return null;
+  const selected = await getSelectedProject();
+  if (!selected?.project) return null;
+  const project = selected.project;
 
   const now = new Date();
 

@@ -8,20 +8,18 @@ import { getUserUsageSummary } from "@/lib/billing/usage";
 import Link from "next/link";
 import { KeyRound, Settings2 } from "lucide-react";
 
+import { getSelectedProject } from "@/lib/get-selected-project";
+
 export default async function ProjectSettingsPage() {
   const session = await auth();
   if (!session?.user) return null;
 
-  const [project, usageSummary] = await Promise.all([
-    db
-      .select()
-      .from(projects)
-      .where(eq(projects.userId, session.user.id))
-      .limit(1)
-      .then((r) => r[0]),
+  const [selected, usageSummary] = await Promise.all([
+    getSelectedProject(),
     getUserUsageSummary(session.user.id),
   ]);
 
+  const project = selected?.project;
   if (!project) return null;
 
   const canExtendRetention = usageSummary.plan !== "free";
