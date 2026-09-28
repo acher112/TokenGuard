@@ -34,10 +34,7 @@ export default async function ApiKeysSettingsPage() {
     .where(eq(apiKeys.projectId, project.id));
 
   const activeKeys = keys.filter((k) => !k.revokedAt);
-  // Pick the active key prefix or fallback string
-  const activeKeyHint = activeKeys[0]?.keyPrefix
-    ? `${activeKeys[0].keyPrefix}...`
-    : "tg_live_your_key_here";
+  const activeKeyHint = "YOUR_FULL_API_KEY";
 
   return (
     <div className="space-y-6 max-w-4xl">
