@@ -186,31 +186,58 @@ export async function POST(request: Request) {
       "subscription.paused",
       "subscription.resumed",
       "subscription.canceled",
+      "transaction.completed",  // catches user_id from custom_data reliably
     ]);
 
     if (!HANDLED_PADDLE_EVENTS.has(eventType)) {
       return NextResponse.json({ received: true, skipped: true });
     }
 
+    // For transaction.completed: priceId is at items[0].price.id (same shape)
+    // For subscription.*: priceId is at items[0].price.id
+    const priceId =
+      data.items?.[0]?.price?.id ??
+      data.items?.[0]?.price_id ??
+      "";
+    const userId: string | undefined =
+      data.custom_data?.user_id ??
+      data.subscription_id; // fallback — won't match but prevents crash
+
+    const plan = mapPriceToPlan(priceId);
+
+    // For transaction.completed, just upgrade the user plan directly
+    if (eventType === "transaction.completed") {
+      if (userId && data.custom_data?.user_id) {
+        const effectivePlan: "free" | "pro" | "team" =
+          plan !== "free" ? plan : "free";
+        await db
+          .update(users)
+          .set({ plan: effectivePlan, updatedAt: new Date() })
+          .where(eq(users.id, data.custom_data.user_id));
+      }
+      return NextResponse.json({ received: true });
+    }
+
+    // Subscription events
     const subscriptionId = data.id;
     const customerId = data.customer_id;
-    const priceId = data.items?.[0]?.price?.id ?? "";
-    const userId = data.custom_data?.user_id;
     const status = mapPaddleStatus(data.status);
-    const plan = mapPriceToPlan(priceId);
 
     const renewalDate = data.current_billing_period?.ends_at
       ? new Date(data.current_billing_period.ends_at)
       : null;
-    const cancelledAt = data.scheduled_change?.action === "cancel" && data.scheduled_change?.effective_at
-      ? new Date(data.scheduled_change.effective_at)
-      : null;
+    const cancelledAt =
+      data.scheduled_change?.action === "cancel" &&
+      data.scheduled_change?.effective_at
+        ? new Date(data.scheduled_change.effective_at)
+        : null;
 
-    if (userId) {
+    if (userId && data.custom_data?.user_id) {
+      const realUserId: string = data.custom_data.user_id;
       await db
         .insert(subscriptions)
         .values({
-          userId,
+          userId: realUserId,
           lsSubscriptionId: subscriptionId,
           lsCustomerId: customerId,
           lsOrderId: data.transaction_id ?? null,
@@ -242,7 +269,7 @@ export async function POST(request: Request) {
       await db
         .update(users)
         .set({ plan: effectivePlan, updatedAt: new Date() })
-        .where(eq(users.id, userId));
+        .where(eq(users.id, realUserId));
     }
 
     return NextResponse.json({ received: true });
