@@ -13,19 +13,23 @@ interface DangerZoneProps {
   projectId: string;
   projectName: string;
   currentRetention: "7" | "30" | "90";
-  canExtendRetention: boolean; // pro/team plans only
+  userPlan?: "free" | "pro" | "team";
 }
 
 export function DangerZone({
   projectId,
   projectName,
   currentRetention,
-  canExtendRetention,
+  userPlan = "free",
 }: DangerZoneProps) {
   const router = useRouter();
   const [retention, setRetention] = useState(currentRetention);
   const [savingRetention, setSavingRetention] = useState(false);
   const [retentionSaved, setRetentionSaved] = useState(false);
+  const [retentionError, setRetentionError] = useState("");
+
+  const can30Days = userPlan === "pro" || userPlan === "team";
+  const can90Days = userPlan === "team";
 
   const [confirmDeleteProject, setConfirmDeleteProject] = useState("");
   const [deletingProject, setDeletingProject] = useState(false);
@@ -37,13 +41,27 @@ export function DangerZone({
 
   const handleRetentionChange = async (val: string) => {
     const v = val as "7" | "30" | "90";
+    if (v === "90" && !can90Days) {
+      alert("90-day retention is exclusively available on the Enterprise plan ($249/mo).");
+      return;
+    }
+    if (v === "30" && !can30Days) {
+      alert("30-day retention requires a Pro or Enterprise plan.");
+      return;
+    }
     setRetention(v);
     setSavingRetention(true);
-    await setDataRetention(projectId, v);
+    setRetentionError("");
+    const res = await setDataRetention(projectId, v);
     setSavingRetention(false);
-    setRetentionSaved(true);
-    setTimeout(() => setRetentionSaved(false), 2000);
-    router.refresh();
+    if (res?.error) {
+      setRetentionError(res.error);
+      setRetention(currentRetention);
+    } else {
+      setRetentionSaved(true);
+      setTimeout(() => setRetentionSaved(false), 2000);
+      router.refresh();
+    }
   };
 
   const handleDeleteProject = async () => {
@@ -68,27 +86,30 @@ export function DangerZone({
           <CardTitle className="text-base">Data Retention</CardTitle>
           <CardDescription>
             How long traces and errors are stored for this project.
-            {!canExtendRetention && " Upgrade to Pro or Team for longer retention."}
+            {userPlan === "free" && " Free plan includes 7 days. Upgrade to Pro for 30 days or Enterprise for 90 days."}
+            {userPlan === "pro" && " Pro plan includes up to 30 days. Upgrade to Enterprise for 90-day retention."}
+            {userPlan === "team" && " Enterprise plan includes full 90-day data retention."}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
             <select
               value={retention}
               onChange={(e) => handleRetentionChange(e.target.value)}
-              disabled={savingRetention || !canExtendRetention}
-              className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-44"
+              disabled={savingRetention}
+              className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-56"
             >
-              <option value="7">7 days</option>
-              <option value="30" disabled={!canExtendRetention}>
-                30 days{!canExtendRetention ? " (Pro+)" : ""}
+              <option value="7">7 days (Free tier)</option>
+              <option value="30" disabled={!can30Days}>
+                30 days{!can30Days ? " (Requires Pro)" : " (Pro Plan)"}
               </option>
-              <option value="90" disabled={!canExtendRetention}>
-                90 days{!canExtendRetention ? " (Team)" : ""}
+              <option value="90" disabled={!can90Days}>
+                90 days{!can90Days ? " (Requires Enterprise)" : " (Enterprise Plan)"}
               </option>
             </select>
             {savingRetention && <span className="text-xs text-muted-foreground">Saving…</span>}
             {retentionSaved && <span className="text-xs text-green-600">Saved ✓</span>}
+            {retentionError && <span className="text-xs text-destructive">{retentionError}</span>}
           </div>
         </CardContent>
       </Card>

@@ -96,12 +96,12 @@ export async function POST() {
     const subData = await subRes.json();
     const subs: any[] = subData.data ?? [];
 
-    // Find first active or trialing subscription
-    const activeSub = subs.find(
+    // Filter all active or trialing subscriptions
+    const activeSubs = subs.filter(
       (s) => s.status === "active" || s.status === "trialing"
     );
 
-    if (!activeSub) {
+    if (activeSubs.length === 0) {
       return NextResponse.json({
         synced: false,
         message: "No active subscription found",
@@ -109,6 +109,21 @@ export async function POST() {
       });
     }
 
+    // Sort active subscriptions:
+    // 1. Higher tier first: team (Enterprise) > pro > free
+    // 2. Most recent subscription first
+    const tierWeight: Record<string, number> = { team: 3, pro: 2, free: 1 };
+    activeSubs.sort((a, b) => {
+      const planA = mapPriceToPlan(a.items?.[0]?.price?.id ?? "");
+      const planB = mapPriceToPlan(b.items?.[0]?.price?.id ?? "");
+      const weightDiff = (tierWeight[planB] ?? 0) - (tierWeight[planA] ?? 0);
+      if (weightDiff !== 0) return weightDiff;
+      const dateA = new Date(a.updated_at ?? a.created_at ?? 0).getTime();
+      const dateB = new Date(b.updated_at ?? b.created_at ?? 0).getTime();
+      return dateB - dateA;
+    });
+
+    const activeSub = activeSubs[0];
     const priceId = activeSub.items?.[0]?.price?.id ?? "";
     const plan: Plan = mapPriceToPlan(priceId);
 

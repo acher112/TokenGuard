@@ -9,9 +9,9 @@ import { db } from "@/lib/db/client";
 import { projects, users, traces, apiKeys } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { signOut } from "@/lib/auth";
 import { z } from "zod";
+import { getUserPlan } from "@/lib/billing";
 
 // ─── Rename Project ───────────────────────────────────────────────────────────
 
@@ -73,6 +73,15 @@ export async function setDataRetention(
     .then((r) => r[0]);
 
   if (!project) return { error: "Project not found" };
+
+  // Enforce plan-based retention limits
+  const userPlan = await getUserPlan(session.user.id);
+  if (days === "90" && userPlan !== "team") {
+    return { error: "90-day retention is only available on the Enterprise plan." };
+  }
+  if (days === "30" && userPlan === "free") {
+    return { error: "30-day retention requires a Pro or Enterprise plan." };
+  }
 
   await db
     .update(projects)

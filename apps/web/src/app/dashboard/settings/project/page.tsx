@@ -65,7 +65,7 @@ export default async function ProjectSettingsPage() {
           projectId={project.id}
           projectName={project.name}
           currentRetention={project.retentionDays as "7" | "30" | "90"}
-          canExtendRetention={canExtendRetention}
+          userPlan={usageSummary.plan}
         />
       </div>
     </div>
