@@ -81,6 +81,10 @@ export async function POST(request: Request) {
     })
     .returning();
 
+  if (!project) {
+    return NextResponse.json({ error: "Failed to create project" }, { status: 500 });
+  }
+
   // Create initial default API key for the new project
   const { rawKey, keyHash, keyPrefix } = generateApiKey();
   await db.insert(apiKeys).values({

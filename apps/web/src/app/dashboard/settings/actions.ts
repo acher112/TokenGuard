@@ -9,6 +9,7 @@ import { db } from "@/lib/db/client";
 import { projects, users, traces, apiKeys } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { signOut } from "@/lib/auth";
 import { z } from "zod";
 import { getUserPlan } from "@/lib/billing";
