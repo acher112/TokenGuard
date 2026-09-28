@@ -2,13 +2,15 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db/client";
-import { projects } from "@/lib/db/schema";
+import { projects, apiKeys } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { PLAN_LIMITS, getUserPlan } from "@/lib/billing";
+import { generateApiKey } from "@/lib/api-keys";
 
 const createProjectSchema = z.object({
   name: z.string().min(1).max(50).trim(),
   description: z.string().max(200).trim().optional(),
+  retentionDays: z.enum(["7", "30", "90"]).optional(),
 });
 
 // GET /api/v1/projects — list all projects for the current user
@@ -62,15 +64,31 @@ export async function POST(request: Request) {
     );
   }
 
+  let retention = parsed.data.retentionDays ?? "7";
+  if (retention === "90" && plan !== "team") {
+    retention = plan === "pro" ? "30" : "7";
+  } else if (retention === "30" && plan === "free") {
+    retention = "7";
+  }
+
   const [project] = await db
     .insert(projects)
     .values({
       userId: session.user.id,
       name: parsed.data.name,
       description: parsed.data.description,
-      retentionDays: "7", // Default; user can change in settings
+      retentionDays: retention as "7" | "30" | "90",
     })
     .returning();
 
-  return NextResponse.json({ project }, { status: 201 });
+  // Create initial default API key for the new project
+  const { rawKey, keyHash, keyPrefix } = generateApiKey();
+  await db.insert(apiKeys).values({
+    projectId: project.id,
+    name: "Default Key",
+    keyHash,
+    keyPrefix,
+  });
+
+  return NextResponse.json({ project, initialApiKey: rawKey }, { status: 201 });
 }

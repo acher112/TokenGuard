@@ -8,6 +8,8 @@ import { cookies } from "next/headers";
 import { SELECTED_PROJECT_COOKIE } from "@/lib/get-selected-project";
 import { ProjectSwitcher } from "@/components/layout/project-switcher";
 
+import { getUserPlan, PLAN_LIMITS } from "@/lib/billing";
+
 export default async function DashboardLayout({
   children,
 }: {
@@ -18,6 +20,10 @@ export default async function DashboardLayout({
   if (!session?.user) {
     redirect("/login");
   }
+
+  // Load user plan directly from DB
+  const userPlan = await getUserPlan(session.user.id);
+  const limits = PLAN_LIMITS[userPlan];
 
   // Load all user projects
   const userProjects = await db
@@ -40,7 +46,7 @@ export default async function DashboardLayout({
   const user = {
     name: session.user.name,
     email: session.user.email,
-    plan: (session.user as { plan?: string }).plan ?? "free",
+    plan: userPlan,
   };
 
   async function handleSignOut() {
@@ -56,6 +62,8 @@ export default async function DashboardLayout({
         <ProjectSwitcher
           projects={userProjects}
           selectedProjectId={selectedProject!.id}
+          userPlan={userPlan}
+          maxProjects={limits.maxProjects}
         />
       }
     >
