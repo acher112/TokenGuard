@@ -41,29 +41,35 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
   // ── Providers ─────────────────────────────────────────────────────────────
   providers: [
-    // Google OAuth — active when GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET are set
-    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
-      ? [
-          Google({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            // Allow any verified Google account (Gmail, Workspace, etc.)
-            allowDangerousEmailAccountLinking: true,
-          }),
-        ]
-      : []),
+    // Google OAuth
+    // NextAuth v5 auto-reads AUTH_GOOGLE_ID / AUTH_GOOGLE_SECRET,
+    // but we also accept GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET for clarity.
+    ...(
+      (process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID) &&
+      (process.env.AUTH_GOOGLE_SECRET || process.env.GOOGLE_CLIENT_SECRET)
+        ? [
+            Google({
+              clientId: (process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID)!,
+              clientSecret: (process.env.AUTH_GOOGLE_SECRET ?? process.env.GOOGLE_CLIENT_SECRET)!,
+            }),
+          ]
+        : []
+    ),
 
-    // GitHub OAuth — active when GITHUB_CLIENT_ID + GITHUB_CLIENT_SECRET are set
-    ...(process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET
-      ? [
-          GitHub({
-            clientId: process.env.GITHUB_CLIENT_ID,
-            clientSecret: process.env.GITHUB_CLIENT_SECRET,
-            // Only users with a verified primary email on GitHub can sign in
-            allowDangerousEmailAccountLinking: true,
-          }),
-        ]
-      : []),
+    // GitHub OAuth
+    // NextAuth v5 auto-reads AUTH_GITHUB_ID / AUTH_GITHUB_SECRET,
+    // but we also accept GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET for clarity.
+    ...(
+      (process.env.AUTH_GITHUB_ID || process.env.GITHUB_CLIENT_ID) &&
+      (process.env.AUTH_GITHUB_SECRET || process.env.GITHUB_CLIENT_SECRET)
+        ? [
+            GitHub({
+              clientId: (process.env.AUTH_GITHUB_ID ?? process.env.GITHUB_CLIENT_ID)!,
+              clientSecret: (process.env.AUTH_GITHUB_SECRET ?? process.env.GITHUB_CLIENT_SECRET)!,
+            }),
+          ]
+        : []
+    ),
 
     // Email/password credentials
     Credentials({
