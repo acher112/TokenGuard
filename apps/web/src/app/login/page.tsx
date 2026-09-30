@@ -75,7 +75,8 @@ export default function LoginPage() {
   const handleOAuth = async (provider: "google" | "github") => {
     setOauthLoading(provider);
     setError("");
-    await signIn(provider, { callbackUrl: "/dashboard" });
+    // Go to onboarding — it will redirect to /dashboard if user already has projects
+    await signIn(provider, { callbackUrl: "/onboarding" });
   };
 
   return (

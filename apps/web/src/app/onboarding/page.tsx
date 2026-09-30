@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +34,31 @@ export default function OnboardingPage() {
   const [selectedGoal, setSelectedGoal] = useState<string>("cost");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+
+  // If the user already has projects (e.g. existing account signing in via Google/GitHub),
+  // skip onboarding and go straight to the dashboard.
+  useEffect(() => {
+    fetch("/api/v1/projects")
+      .then((r) => r.json())
+      .then((data: { projects?: unknown[] }) => {
+        if (Array.isArray(data.projects) && data.projects.length > 0) {
+          router.replace("/dashboard");
+        } else {
+          setIsChecking(false);
+        }
+      })
+      .catch(() => setIsChecking(false));
+  }, [router]);
+
+  if (isChecking) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-muted-foreground text-sm">Loading...</div>
+      </div>
+    );
+  }
+
 
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
