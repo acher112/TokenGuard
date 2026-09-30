@@ -59,6 +59,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // GitHub OAuth
     // NextAuth v5 auto-reads AUTH_GITHUB_ID / AUTH_GITHUB_SECRET,
     // but we also accept GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET for clarity.
+    // `checks: []` disables the `iss` (issuer) validation that GitHub doesn't support
+    // (fixes "unexpected iss response parameter value" in NextAuth v5 beta).
     ...(
       (process.env.AUTH_GITHUB_ID || process.env.GITHUB_CLIENT_ID) &&
       (process.env.AUTH_GITHUB_SECRET || process.env.GITHUB_CLIENT_SECRET)
@@ -66,6 +68,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             GitHub({
               clientId: (process.env.AUTH_GITHUB_ID ?? process.env.GITHUB_CLIENT_ID)!,
               clientSecret: (process.env.AUTH_GITHUB_SECRET ?? process.env.GITHUB_CLIENT_SECRET)!,
+              checks: ["none"] as any,
             }),
           ]
         : []
