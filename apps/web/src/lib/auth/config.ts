@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Resend from "next-auth/providers/resend";
+import Google from "next-auth/providers/google";
+import GitHub from "next-auth/providers/github";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
@@ -39,6 +41,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
   // ── Providers ─────────────────────────────────────────────────────────────
   providers: [
+    // Google OAuth — active when GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET are set
+    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+      ? [
+          Google({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            // Allow any verified Google account (Gmail, Workspace, etc.)
+            allowDangerousEmailAccountLinking: true,
+          }),
+        ]
+      : []),
+
+    // GitHub OAuth — active when GITHUB_CLIENT_ID + GITHUB_CLIENT_SECRET are set
+    ...(process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET
+      ? [
+          GitHub({
+            clientId: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+            // Only users with a verified primary email on GitHub can sign in
+            allowDangerousEmailAccountLinking: true,
+          }),
+        ]
+      : []),
+
     // Email/password credentials
     Credentials({
       name: "credentials",
